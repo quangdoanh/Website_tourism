@@ -1,13 +1,11 @@
 const express = require('express')
 const path = require('path')
+require('dotenv').config()
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://quangdoanh04072004:D97Kh4S6XDuM5xo9@cluster0.kjsqw.mongodb.net/tour-management');
+mongoose.connect(process.env.DATABASE);
 
-const Tour = mongoose.model('Tour', {
-    name: String,
-    vehicle: String
-});
+const Tour = require("./models/tour.model")
 
 const app = express()
 const port = 3000
