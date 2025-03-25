@@ -5,8 +5,10 @@ require('dotenv').config()
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DATABASE);
 
-const Tour = require("./models/tour.model")
-
+// Controllers
+const tourController = require("./controllers/client/tour.controller")
+const homeController = require("./controllers/client/home.controller")
+// end Controllers
 const app = express()
 const port = 3000
 
@@ -18,22 +20,8 @@ app.set('view engine', 'pug');
 //  Thiết lập mục chứa file tĩnh của Frontend
 app.use(express.static(path.join(__dirname, "public")))
 
-app.get('/', (req, res) => {
-
-    res.render('clients/pages/home.pug', {
-        pageTitle: "Doanh dep zai so 1"
-    })
-})
-app.get('/tours', async (req, res) => {
-    const tourList = await (Tour.find({}));
-
-    console.log(tourList);
-
-    res.render('clients/pages/tour-list', {
-        pageTitle: "Doanh dep zai",
-        tourList: tourList
-    })
-})
+app.get('/', homeController.home)
+app.get('/tours', tourController.list)
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
