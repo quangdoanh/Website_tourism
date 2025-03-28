@@ -11,3 +11,10 @@ module.exports.list = async (req, res) => {
         tourList: tourList
     })
 }
+module.exports.detail = async (req, res) => {
+
+    res.render('clients/pages/detail-tour', {
+        pageTitle: "Chi tiet tour",
+
+    })
+}
