@@ -7,8 +7,8 @@ module.exports.list = async (req, res) => {
     console.log(tourList);
 
     res.render('clients/pages/tour-list', {
-        pageTitle: "Doanh dep zai",
-        tourList: tourList
+        pageTitle: "Doanh dep zai"
+        // tourList: tourList
     })
 }
 module.exports.detail = async (req, res) => {
