@@ -13,3 +13,21 @@ module.exports.register = (req, res) => {
         pageTitle: "Trang register"
     })
 }
+module.exports.forgotPassword = (req, res) => {
+
+    res.render('admin/pages/forgot-password.pug', {
+        pageTitle: "Trang quên mật khẩu"
+    })
+}
+module.exports.otpPassword = (req, res) => {
+
+    res.render('admin/pages/otp-password.pug', {
+        pageTitle: "Trang nhập mã OTP"
+    })
+}
+module.exports.resetPassword = (req, res) => {
+
+    res.render('admin/pages/reset-password.pug', {
+        pageTitle: "Reset password"
+    })
+}
