@@ -12,6 +12,7 @@ const app = express();
 const port = 3000;
 
 // Routers
+const adminRouters = require("./routers/admin/index.router")
 const clientRouters = require("./routers/client/index.router")
 // End Routers
 
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, "public")))
 
 //  Thiet lap Router 
 
+app.use("/admin", adminRouters)
 app.use("/", clientRouters)
 
 //  End Thiet lap Router
