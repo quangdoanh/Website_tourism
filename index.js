@@ -7,9 +7,16 @@ require('dotenv').config()
 // Kết nối dabase
 const database = require("./config/database.config")
 database.connect();
-// 
+//end
+// Kết nối variable 
+const variableConfig = require("./config/variable.config")
+// end
 const app = express();
 const port = 3000;
+
+// Tạo biến toàn cục
+app.locals.adminPathName = variableConfig.pathAdmin
+// end
 
 // Routers
 const adminRouters = require("./routers/admin/index.router")
@@ -28,7 +35,7 @@ app.use(express.static(path.join(__dirname, "public")))
 
 //  Thiet lap Router 
 
-app.use("/admin", adminRouters)
+app.use(`/${variableConfig.pathAdmin}`, adminRouters)
 app.use("/", clientRouters)
 
 //  End Thiet lap Router
