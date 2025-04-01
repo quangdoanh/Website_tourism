@@ -4,9 +4,4 @@ module.exports.list = (req, res) => {
         pageTitle: "Danh sách người dùng"
     })
 }
-module.exports.edit = (req, res) => {
 
-    res.render('admin/pages/order-edit', {
-        pageTitle: "Trang sửa order"
-    })
-}
