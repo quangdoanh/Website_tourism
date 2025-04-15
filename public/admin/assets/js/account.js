@@ -1,6 +1,7 @@
+
 // Login Form
 const loginForm = document.querySelector("#login-form");
-if(loginForm) {
+if (loginForm) {
   const validation = new JustValidate('#login-form');
 
   validation
@@ -45,17 +46,43 @@ if(loginForm) {
       const password = event.target.password.value;
       const rememberPassword = event.target.rememberPassword.checked;
 
-      console.log(email);
-      console.log(password);
-      console.log(rememberPassword);
+      console.log("Chạy vào đây")
+
+      const dataFinal = {
+        email: email,
+        password: password
+      }
+
+      fetch(`/${pathAdmin}/account/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataFinal)
+
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            alert(data.message)
+          }
+
+          if (data.code == "success") {
+            window.location.href = `/${pathAdmin}/dashboard`;
+          }
+        })
+
+
+
+
     })
-  ;
+    ;
 }
 // End Login Form
 
 // Register Form
 const registerForm = document.querySelector("#register-form");
-if(registerForm) {
+if (registerForm) {
   const validation = new JustValidate('#register-form');
 
   validation
@@ -63,7 +90,8 @@ if(registerForm) {
       {
         rule: 'required',
         errorMessage: 'Vui lòng nhập họ tên!'
-      },
+      }
+      ,
       {
         rule: 'minLength',
         value: 5,
@@ -122,17 +150,41 @@ if(registerForm) {
       const email = event.target.email.value;
       const password = event.target.password.value;
 
+      const accountAdminnew = {
+        name: fullName,
+        email: email,
+        password: password
+      }
+
+      fetch(`/${pathAdmin}/account/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(accountAdminnew)
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            alert(data.message)
+          }
+          if (data.code == "success") {
+            window.location.href = `/${pathAdmin}/account/register-initial`;
+          }
+        })
+
+
       console.log(fullName);
       console.log(email);
       console.log(password);
     })
-  ;
+    ;
 }
 // End Register Form
 
 // Forgot Password Form
 const forgotPasswordForm = document.querySelector("#forgot-password-form");
-if(forgotPasswordForm) {
+if (forgotPasswordForm) {
   const validation = new JustValidate('#forgot-password-form');
 
   validation
@@ -149,14 +201,17 @@ if(forgotPasswordForm) {
     .onSuccess((event) => {
       const email = event.target.email.value;
       console.log(email);
+
+
+
     })
-  ;
+    ;
 }
 // End Forgot Password Form
 
 // OTP Password Form
 const otpPasswordForm = document.querySelector("#otp-password-form");
-if(otpPasswordForm) {
+if (otpPasswordForm) {
   const validation = new JustValidate('#otp-password-form');
 
   validation
@@ -170,13 +225,13 @@ if(otpPasswordForm) {
       const otp = event.target.otp.value;
       console.log(otp);
     })
-  ;
+    ;
 }
 // End OTP Password Form
 
 // Reset Password Form
 const resetPasswordForm = document.querySelector("#reset-password-form");
-if(resetPasswordForm) {
+if (resetPasswordForm) {
   const validation = new JustValidate('#reset-password-form');
 
   validation
@@ -223,6 +278,6 @@ if(resetPasswordForm) {
       const password = event.target.password.value;
       console.log(password);
     })
-  ;
+    ;
 }
 // End Reset Password Form

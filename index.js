@@ -14,9 +14,16 @@ const variableConfig = require("./config/variable.config")
 const app = express();
 const port = 3000;
 
-// Tạo biến toàn cục
+// Tạo biến toàn cục cho PUG
 app.locals.adminPathName = variableConfig.pathAdmin
 // end
+// Tạo biến toàn cục cho các file be
+global.adminPathName = variableConfig.pathAdmin
+// end
+
+// Cho phép gửi file json lên be
+app.use(express.json());
+// End
 
 // Routers
 const adminRouters = require("./routers/admin/index.router")
