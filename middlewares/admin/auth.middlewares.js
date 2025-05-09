@@ -30,6 +30,10 @@ module.exports.verifyToken = async (req, res, next) => {
         //lấy thông tin account
         req.account = existAccount;
 
+        // gửi tên account về fe (bug)
+        res.locals.account = existAccount
+
+
 
         next();
     } catch (error) {
