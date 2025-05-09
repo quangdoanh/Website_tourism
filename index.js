@@ -4,26 +4,37 @@ const path = require('path')
 // tải các biến môi trường từ file .env vào biến môi trường của Node.js
 require('dotenv').config()
 
+//Lấy biến token
+const cookieParser = require('cookie-parser');
+// End
+
 // Kết nối dabase
 const database = require("./config/database.config")
 database.connect();
 //end
+
 // Kết nối variable 
 const variableConfig = require("./config/variable.config")
 // end
+
 const app = express();
 const port = 3000;
 
 // Tạo biến toàn cục cho PUG
 app.locals.adminPathName = variableConfig.pathAdmin
 // end
+
 // Tạo biến toàn cục cho các file be
-global.adminPathName = variableConfig.pathAdmin
+global.pathAdmin = variableConfig.pathAdmin;
 // end
 
 // Cho phép gửi file json lên be
 app.use(express.json());
 // End
+
+// lấy token
+app.use(cookieParser())
+// end
 
 // Routers
 const adminRouters = require("./routers/admin/index.router")

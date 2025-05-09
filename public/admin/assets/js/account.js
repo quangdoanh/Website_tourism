@@ -46,11 +46,12 @@ if (loginForm) {
       const password = event.target.password.value;
       const rememberPassword = event.target.rememberPassword.checked;
 
-      console.log("Chạy vào đây")
+
 
       const dataFinal = {
         email: email,
-        password: password
+        password: password,
+        rememberPassword: rememberPassword
       }
 
       fetch(`/${pathAdmin}/account/login`, {
@@ -83,7 +84,7 @@ if (loginForm) {
 // Register Form
 const registerForm = document.querySelector("#register-form");
 if (registerForm) {
-  const validation = new JustValidate('#register-form');
+  const validation = new JustValidate('#register-form') // tự động lắng nghe sự kiện submit ;
 
   validation
     .addField('#fullName', [
@@ -165,10 +166,13 @@ if (registerForm) {
       })
         .then(res => res.json())
         .then(data => {
+
+          console.log(data.code)
           if (data.code == "error") {
             alert(data.message)
           }
           if (data.code == "success") {
+            console.log("Chạy vao day")
             window.location.href = `/${pathAdmin}/account/register-initial`;
           }
         })
@@ -200,9 +204,32 @@ if (forgotPasswordForm) {
     ])
     .onSuccess((event) => {
       const email = event.target.email.value;
-      console.log(email);
+
+      const dataFinal = {
+        email: email,
+      };
 
 
+      fetch(`/${pathAdmin}/account/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataFinal)
+      })
+        .then(res => res.json())
+        .then(data => {
+
+          console.log(data.code)
+          if (data.code == "error") {
+            alert(data.message)
+          }
+          if (data.code == "success") {
+            console.log("Chạy vao day")
+            window.location.href = `/${pathAdmin}/account/otp-password?email=${email}`;
+            // window.location.href = `/${pathAdmin}/account/otp-password?email=${email}`
+          }
+        })
 
     })
     ;
@@ -223,7 +250,37 @@ if (otpPasswordForm) {
     ])
     .onSuccess((event) => {
       const otp = event.target.otp.value;
-      console.log(otp);
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get("email");
+
+      console.log(email)
+
+      const dataFinal = {
+        email: email,
+        otp: otp
+      };
+
+      fetch(`/${pathAdmin}/account/otp-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataFinal)
+      })
+        .then(res => res.json())
+        .then(data => {
+
+          console.log(data.code)
+          if (data.code == "error") {
+            alert(data.message)
+          }
+          if (data.code == "success") {
+            console.log(data.message)
+            window.location.href = `/${pathAdmin}/account/reset-password`;
+          }
+        })
+
     })
     ;
 }

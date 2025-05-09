@@ -77,10 +77,63 @@ module.exports.loginPost = (req, res, next) => {
             .messages({
                 "string.empty": "Vui lòng nhập mật khẩu!",
             }),
+        rememberPassword: Joi.boolean()
     });
 
     const { error } = schema.validate(req.body);
+    console.log("Lỗi:")
+    console.log(error);
 
+    if (error) {
+        const errorMessage = error.details[0].message;
+        console.log(errorMessage);
+        res.json({
+            code: "error",
+            message: errorMessage
+        });
+        return;
+    }
+
+    next();
+}
+module.exports.forgotPasswordPost = (req, res, next) => {
+    const schema = Joi.object({
+        email: Joi.string()
+            .required()
+            .email()
+            .messages({
+                "string.empty": "Vui lòng nhập email!",
+                "string.email": "Email không đúng định dạng!"
+            }),
+    });
+
+    const { error } = schema.validate(req.body);
+    console.log("Lỗi:")
+    console.log(error);
+
+    if (error) {
+        const errorMessage = error.details[0].message;
+        console.log(errorMessage);
+        res.json({
+            code: "error",
+            message: errorMessage
+        });
+        return;
+    }
+
+    next();
+}
+module.exports.otpPasswordPost = (req, res, next) => {
+    const schema = Joi.object({
+        otp: Joi.string()
+            .required()
+            .messages({
+                "string.empty": "Vui lòng nhập mã OTP!",
+            }),
+        email: Joi.string()
+    });
+
+    const { error } = schema.validate(req.body);
     console.log("Lỗi:")
     console.log(error);
 

@@ -19,9 +19,21 @@ router.post('/login',
     accountController.loginPost)
 
 
-router.post('/register-initial', accountController.registerInitial)
+router.get('/register-initial', accountController.registerInitial)
 router.get('/forgot-password', accountController.forgotPassword)
+
+router.post('/forgot-password',
+    validateAccount.forgotPasswordPost,
+    accountController.forgotPasswordPost
+)
+
 router.get('/otp-password', accountController.otpPassword)
+
+router.post('/otp-password',
+    validateAccount.otpPasswordPost,
+    accountController.otpPasswordPost
+)
+
 router.get('/reset-password', accountController.resetPassword)
 
 router.post('/logout', accountController.logoutPost)

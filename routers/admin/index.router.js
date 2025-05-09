@@ -10,16 +10,25 @@ const userRouter = require("./user.router")
 const contactRouter = require("./contact.router")
 const settingRouter = require("./setting.router")
 const profileRouter = require("./profile.router")
+const authMiddleware = require("../../middlewares/admin/auth.middlewares")
+
+// NOT SAVE MEMORY CACHE
+route.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store')
+    next();
+})
+
+// 
 
 route.use('/account', accountRouter);
-route.use('/dashboard', dashboardRouter);
-route.use('/category', categorydRouter);
-route.use('/tour', tourRouter);
-route.use('/order', orderRouter);
-route.use('/user', userRouter);
-route.use('/contact', contactRouter);
-route.use('/setting', settingRouter);
-route.use('/profile', profileRouter);
+route.use('/dashboard', authMiddleware.verifyToken, dashboardRouter);
+route.use('/category', authMiddleware.verifyToken, categorydRouter);
+route.use('/tour', authMiddleware.verifyToken, tourRouter);
+route.use('/order', authMiddleware.verifyToken, orderRouter);
+route.use('/user', authMiddleware.verifyToken, userRouter);
+route.use('/contact', authMiddleware.verifyToken, contactRouter);
+route.use('/setting', authMiddleware.verifyToken, settingRouter);
+route.use('/profile', authMiddleware.verifyToken, profileRouter);
 
 // 404 Not Found
 route.get('*', (req, res) => {
