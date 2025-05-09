@@ -35,8 +35,8 @@ module.exports.registerPost = async (req, res) => {
         return
     }
 
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
+    const salt = bcrypt.genSaltSync(10); // 10 là số vòng (rounds) để tạo salt
+    const hashedPassword = bcrypt.hashSync(password, salt);  // là hàm dùng để mã hóa mật khẩu.
 
 
     const newAdmin = new accountAdmin({
@@ -273,4 +273,35 @@ module.exports.resetPassword = (req, res) => {
     res.render('admin/pages/reset-password.pug', {
         pageTitle: "Reset password"
     })
+}
+module.exports.resetPasswordPost = async (req, res) => {
+
+    const { password } = req.body;
+
+    console.log(password)
+
+
+    // encryption password
+    const salt = bcrypt.genSaltSync(10); // 10 là số vòng (rounds) để tạo salt
+    const hashedPassword = bcrypt.hashSync(password, salt);  // là hàm dùng để mã hóa mật khẩu.
+
+    // take infor account from validate
+    console.log(req.account)
+
+
+    // update password
+
+    await accountAdmin.updateOne({
+        _id: req.account.id,
+        status: "active"
+    }, {
+        password: hashedPassword
+    })
+
+    res.json({
+        code: "success",
+        message: "Đổi mật khẩu thành công!"
+    })
+
+
 }

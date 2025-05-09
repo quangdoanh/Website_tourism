@@ -8,6 +8,11 @@ const accountController = require("../../controllers/admin/account.controller")
 const validateAccount = require("../../validates/account.validate")
 // End
 
+// Middle
+const authMiddleware = require("../../middlewares/admin/auth.middlewares")
+// End 
+
+
 router.get('/login', accountController.login)
 router.get('/register', accountController.registerGet)
 
@@ -35,6 +40,12 @@ router.post('/otp-password',
 )
 
 router.get('/reset-password', accountController.resetPassword)
+
+router.post('/reset-password',
+    validateAccount.resetPasswordPost,
+    authMiddleware.verifyToken,
+    accountController.resetPasswordPost
+)
 
 router.post('/logout', accountController.logoutPost)
 module.exports = router;

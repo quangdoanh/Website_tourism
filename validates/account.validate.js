@@ -149,3 +149,42 @@ module.exports.otpPasswordPost = (req, res, next) => {
 
     next();
 }
+module.exports.resetPasswordPost = (req, res, next) => {
+    const schema = Joi.object({
+        password: Joi.string()
+            .required()
+            .min(8)
+            .custom((value, helpers) => {
+                if (!/[A-Z]/.test(value)) {
+                    return helpers.error('password.uppercase');
+                }
+                if (!/[a-z]/.test(value)) {
+                    return helpers.error('password.lowercase');
+                }
+                if (!/\d/.test(value)) {
+                    return helpers.error('password.number');
+                }
+                if (!/[@$!%*?&]/.test(value)) {
+                    return helpers.error('password.special');
+                }
+                return value;
+            })
+
+    });
+
+    const { error } = schema.validate(req.body);
+    console.log("Lỗi:")
+    console.log(error);
+
+    if (error) {
+        const errorMessage = error.details[0].message;
+        console.log(errorMessage);
+        res.json({
+            code: "error",
+            message: errorMessage
+        });
+        return;
+    }
+
+    next();
+}

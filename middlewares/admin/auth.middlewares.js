@@ -27,6 +27,9 @@ module.exports.verifyToken = async (req, res, next) => {
             res.redirect(`/${pathAdmin}/account/login`);
             return;
         }
+        //lấy thông tin account
+        req.account = existAccount;
+
 
         next();
     } catch (error) {
