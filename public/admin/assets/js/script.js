@@ -170,6 +170,8 @@ if (categoryCreateForm) {
       formData.append("avatar", avatar);
       formData.append("description", description);
 
+
+
       fetch(`/${pathAdmin}/category/create`, {
         method: "POST",
         body: formData
