@@ -1,5 +1,5 @@
 extends ../layouts/default.pug
-
+include ../mixins/options.pug
 
 
 block main
@@ -13,9 +13,13 @@ block main
       .inner-group
         label(class="inner-label" for="parent") Danh mục cha
         select(id="parent" name="parent")
+          
           option(value="") -- Chọn danh mục --
-          option(value="") Danh mục 1
-          option(value="") Danh mục 2
+          +options(categoryList, 0) 
+         
+            
+
+
       .inner-group
         label(class="inner-label" for="position") Vị trí
         input(type="number" id="position" name="position")

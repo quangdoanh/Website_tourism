@@ -1,5 +1,9 @@
 const route = require("express").Router()
 
+// Validates
+const validateCategory = require("../../validates/category.validate")
+// End validates
+
 const multer = require('multer');
 
 const cloudinaryHelper = require("../../helpers/cloudinary.helper");
@@ -12,6 +16,9 @@ const categoryController = require("../../controllers/admin/category.controller"
 // end Controllers
 route.get('/list', categoryController.list);
 route.get('/create', categoryController.create);
-route.post('/create', upload.single('avatar'), categoryController.createPost);
+route.post('/create',
+    upload.single('avatar'),
+    validateCategory.createPost,
+    categoryController.createPost);
 
 module.exports = route;
