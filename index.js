@@ -8,6 +8,12 @@ require('dotenv').config()
 const cookieParser = require('cookie-parser');
 // End
 
+// thông báo flash 
+const flash = require('express-flash');
+const session = require('express-session');
+
+// end
+
 // Kết nối dabase
 const database = require("./config/database.config")
 database.connect();
@@ -33,7 +39,12 @@ app.use(express.json());
 // End
 
 // lấy token
-app.use(cookieParser())
+app.use(cookieParser("SFGWHSDSGSDSD"));
+// end
+
+// Nhúng Flash
+app.use(session({ cookie: { maxAge: 60000 } }));
+app.use(flash());
 // end
 
 // Routers

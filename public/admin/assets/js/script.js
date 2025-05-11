@@ -644,3 +644,15 @@ if (buttonLogout) {
   })
 }
 // End Logout
+
+
+// Alert
+const alertTime = document.querySelector("[alert-time]");
+if (alertTime) {
+  // let time = alertTime.getAttribute("alert-time");
+  // time = time ? parseInt(time) : 4000;
+  setTimeout(() => {
+    alertTime.remove(); // Xóa phần tử khỏi giao diện
+  }, 4000);
+}
+// End Alert
