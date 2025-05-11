@@ -1620,4 +1620,8 @@ a {
   background-color: #a3e0a3;
 }
 
+.alert-error {
+  background-color: #EB0029;
+}
+
 /* End Alert */

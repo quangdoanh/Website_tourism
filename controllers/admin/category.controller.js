@@ -5,6 +5,7 @@ const accountAdmin = require("../../models/accountAdmin.model")
 const CategoryHelpers = require("../../helpers/category.helper")
 const moment = require("moment/moment")
 
+// ---------- List--------------
 module.exports.list = async (req, res) => {
 
     const categoryList = await Category.find({
@@ -40,6 +41,7 @@ module.exports.list = async (req, res) => {
         categoryList: categoryList
     })
 }
+// ------------Create-------------
 module.exports.create = async (req, res) => {
 
     const categoryList = await Category.find({
@@ -83,6 +85,75 @@ module.exports.createPost = async (req, res) => {
     res.json({
         code: "success"
     })
+
+
+}
+// --------------Edit-----------------
+module.exports.edit = async (req, res) => {
+
+    try {
+        const categoryList = await Category.find({
+            deleted: false
+        })
+
+        const categoryTree = CategoryHelpers.CategoryTree(categoryList);
+
+        const id = req.params.id;
+
+        const categoryDetail = await Category.findOne({
+            _id: id,
+            deleted: false
+        })
+
+        res.render("admin/pages/category-edit", {
+            pageTitle: "Chỉnh sửa danh mục",
+            categoryList: categoryTree,
+            categoryDetail: categoryDetail
+        })
+    } catch (error) {
+        req.flash("error", "danh mục bị lỗi id !");
+        res.redirect(`/${pathAdmin}/category/list`)
+    }
+
+}
+
+module.exports.editPatch = async (req, res) => {
+
+    try {
+        const id = req.params.id
+
+        if (req.body.position) {
+            req.body.position = parseInt(req.body.position)
+        } else {
+            delete req.body.position
+        }
+
+        req.body.updatedBy = req.account.id
+
+
+
+        // take photo in cloud
+        if (req.file) {
+            req.body.avatar = req.file.path;
+        } else {
+            delete req.body.avatar;
+        }
+
+        // updata Model
+
+        await Category.updateOne({
+            _id: id,
+            deleted: false
+        }, req.body)
+
+        req.flash("success", "Sửa danh mục thành công!");
+
+        res.json({
+            code: "success"
+        })
+    } catch (error) {
+        req.flash("error", "Sửa danh mục thất bại!");
+    }
 
 
 }
