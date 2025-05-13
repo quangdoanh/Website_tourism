@@ -8,11 +8,22 @@ const moment = require("moment/moment")
 // ---------- List--------------
 module.exports.list = async (req, res) => {
 
-    const categoryList = await Category.find({
-        deleted: false
-    }).sort({
-        position: "desc"
-    })
+    const find = {
+        deleted: false,
+    }
+
+    if (req.query.status) {
+        find.status = req.query.status
+    }
+    if (req.query.name) {
+        find.createdBy = req.query.name
+    }
+
+    const categoryList = await Category
+        .find(find)
+        .sort({
+            position: "desc"
+        })
 
     for (const item of categoryList) {
         if (item.createdBy) {
@@ -34,13 +45,17 @@ module.exports.list = async (req, res) => {
         item.updatedAtFormat = moment(item.updatedAt).format("HH:mm - DD/MM/YYYY");
     }
 
+    // Body
+    const accountList = await accountAdmin.find({}).select("id name");
 
 
     res.render('admin/pages/category-list', {
         pageTitle: "Quản lý danh mục",
-        categoryList: categoryList
+        categoryList: categoryList,
+        accountAdmin: accountList
     })
 }
+
 // ------------Create-------------
 module.exports.create = async (req, res) => {
 
@@ -156,4 +171,30 @@ module.exports.editPatch = async (req, res) => {
     }
 
 
+}
+
+// --------------- Delete --------------
+module.exports.deletedPatch = async (req, res) => {
+
+    try {
+        const id = req.params.id
+        // deleted Model
+
+        await Category.updateOne({
+            _id: id
+        }, {
+            deleted: true,
+            deletedBy: req.account.id,
+            deletedAt: Date.now()
+
+        })
+
+        req.flash("success", "Xóa danh mục thành công!");
+
+        res.json({
+            code: "success"
+        })
+    } catch (error) {
+        req.flash("error", "Xóa danh mục thất bại!");
+    }
 }

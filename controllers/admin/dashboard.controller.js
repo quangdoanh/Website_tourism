@@ -1,6 +1,7 @@
 module.exports.dashboard = (req, res) => {
 
     res.render('admin/pages/dashboard', {
-        pageTitle: "Tổng quan"
+        pageTitle: "Tổng quan",
+        account: req.account
     })
 }

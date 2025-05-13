@@ -29,4 +29,6 @@ route.patch('/edit/:id',
     validateCategory.createPost,
     categoryController.editPatch);
 
+route.patch('/delete/:id', categoryController.deletedPatch);
+
 module.exports = route;

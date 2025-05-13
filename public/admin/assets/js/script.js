@@ -732,3 +732,82 @@ if (alertTime) {
   }, 4000);
 }
 // End Alert
+
+// Delete category 
+const deleteList = document.querySelectorAll("[button-delete]")
+
+if (deleteList.length > 0) {
+  deleteList.forEach((button) => {
+    button.addEventListener("click", () => {
+      const api = button.getAttribute("data-api")
+
+
+      fetch(api, {
+        method: "PATCH"
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            console.log(data.message)
+          }
+          if (data.code == "success") {
+            window.location.reload()
+          }
+        })
+    })
+  })
+}
+
+
+console.log(deleteList)
+// End delete category
+
+// Filter Status
+const filterStatus = document.querySelector("[filter-status]")
+
+
+
+if (filterStatus) {
+  const url = new URL(window.location.href)
+  filterStatus.addEventListener("change", () => {
+    const value = filterStatus.value
+    if (value) {
+      url.searchParams.set("status", value)
+    } else {
+      url.searchParams.delete("status")
+    }
+    window.location.href = url.href
+  })
+  // hiển thị mặc định
+
+  const valueCurrent = url.searchParams.get("status")
+  if (valueCurrent)
+    filterStatus.value = valueCurrent
+}
+// End
+
+// Filter name
+const filterName = document.querySelector("[filter-name]")
+
+if (filterName) {
+  const url = new URL(window.location.href)
+  filterName.addEventListener("change", () => {
+    const value = filterName.value
+    if (value) {
+      url.searchParams.set("name", value)
+    } else {
+      url.searchParams.delete("name")
+    }
+    window.location.href = url.href
+  })
+  // hiển thị mặc định
+  const valueCurrent = url.searchParams.get("name")
+  if (valueCurrent) {
+    filterName.value = valueCurrent
+  }
+  console.log(filterName.value)
+  console.log("-------")
+  console.log(valueCurrent)
+
+}
+//end
