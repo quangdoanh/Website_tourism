@@ -31,4 +31,6 @@ route.patch('/edit/:id',
 
 route.patch('/delete/:id', categoryController.deletedPatch);
 
+route.patch('/change-multi', categoryController.changeMultiPatch)
+
 module.exports = route;

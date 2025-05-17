@@ -811,3 +811,171 @@ if (filterName) {
 
 }
 //end
+
+// Filter date start
+const filterDatestart = document.querySelector("[filter-start-date]")
+
+if (filterDatestart) {
+  const url = new URL(window.location.href)
+  filterDatestart.addEventListener("change", () => {
+    const value = filterDatestart.value
+    if (value) {
+      url.searchParams.set("dateStart", value)
+    } else {
+      url.searchParams.delete("dateStart")
+    }
+    window.location.href = url.href
+  })
+  // hiển thị mặc định
+  const valueCurrent = url.searchParams.get("dateStart")
+  if (valueCurrent) {
+    filterDatestart.value = valueCurrent
+  }
+  console.log("Date:,", filterDatestart)
+  console.log(filterDatestart.value)
+  console.log("-------")
+  console.log(valueCurrent)
+}
+// end
+
+// Filter date end
+const filterDateEnd = document.querySelector("[filter-end-date]")
+
+if (filterDateEnd) {
+  const url = new URL(window.location.href)
+  filterDateEnd.addEventListener("change", () => {
+    const value = filterDateEnd.value
+    if (value) {
+      url.searchParams.set("dateEnd", value)
+    } else {
+      url.searchParams.delete("dateEnd")
+    }
+    window.location.href = url.href
+  })
+  // hiển thị mặc định
+  const valueCurrent = url.searchParams.get("dateEnd")
+  if (valueCurrent) {
+    filterDateEnd.value = valueCurrent
+  }
+  console.log("Date:,", filterDateEnd)
+  console.log(filterDateEnd.value)
+  console.log("-------")
+  console.log(valueCurrent)
+}
+// end
+
+
+// Reset filter
+const filterReset = document.querySelector("[filter-reset]")
+if (filterReset) {
+  const url = new URL(window.location.href);
+  filterReset.addEventListener("click", () => {
+    url.search = "",
+      window.location.href = url.href
+  })
+}
+
+console.log(filterReset)
+// end
+
+
+// Check all
+const checkAll = document.querySelector("[check-all]")
+if (checkAll) {
+  checkAll.addEventListener("click", () => {
+    const checkList = document.querySelectorAll("[check-item]")
+    checkList.forEach((item) => {
+      item.checked = checkAll.checked
+    })
+  })
+}
+// 
+
+// Change multi
+const changeMulti = document.querySelector("[change-multi]")
+
+if (changeMulti) {
+  const select = changeMulti.querySelector("select")
+  const button = changeMulti.querySelector("button")
+
+
+
+
+  button.addEventListener("click", () => {
+
+    const Listchecked = document.querySelectorAll("[check-item]:checked")
+
+    console.log(Listchecked.length)
+    const option = select.value
+    console.log(option)
+
+    if (option && Listchecked.length > 0) {
+      console.log("chạy vào dây")
+      const ids = []
+      Listchecked.forEach((item) => {
+        const id = item.getAttribute("check-item")
+        ids.push(id)
+      })
+
+      const dataFinal = {
+        option: option,
+        ids: ids
+      };
+
+      fetch(`/${pathAdmin}/category/change-multi`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataFinal)
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            alert(data.message);
+          }
+
+          if (data.code == "success") {
+            window.location.reload();
+          }
+        })
+
+    } else {
+      alert("Vui lòng chọn hành động or danh mục")
+    }
+  })
+
+
+}
+
+// end
+
+
+// Search 
+const search = document.querySelector("[search]");
+if (search) {
+  const url = new URL(window.location.href);
+
+  // Lắng nghe phím đang gõ
+  search.addEventListener("keyup", (event) => {
+    if (event.code == "Enter") {
+      const value = search.value;
+      if (value) {
+        url.searchParams.set("keyword", value.trim());
+      } else {
+        url.searchParams.delete("keyword");
+      }
+
+      window.location.href = url.href;
+    }
+  })
+
+  // Hiển thị lựa chọn mặc định
+  const valueCurrent = url.searchParams.get("keyword");
+  if (valueCurrent) {
+    search.value = valueCurrent;
+  }
+}
+
+
+//end

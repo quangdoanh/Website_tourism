@@ -2,8 +2,10 @@ const Category = require("../../models/category.model")
 
 const accountAdmin = require("../../models/accountAdmin.model")
 
+const slugify = require('slugify');
 const CategoryHelpers = require("../../helpers/category.helper")
 const moment = require("moment/moment")
+const { object } = require("joi")
 
 // ---------- List--------------
 module.exports.list = async (req, res) => {
@@ -12,12 +14,51 @@ module.exports.list = async (req, res) => {
         deleted: false,
     }
 
+    // status
     if (req.query.status) {
         find.status = req.query.status
     }
+    // name
     if (req.query.name) {
         find.createdBy = req.query.name
     }
+
+    //Filter Date
+    const FilterDate = {}
+
+    //dateStart
+    if (req.query.dateStart) {
+        const startDate = moment(req.query.dateStart).startOf("date").toDate();
+        FilterDate.$gte = startDate;
+
+    }
+    //dateEnd
+    if (req.query.dateEnd) {
+        const endDate = moment(req.query.dateEnd).endOf("date").toDate();
+        FilterDate.$lte = endDate;
+    }
+    //object.keys(FilterDate) : trả về 1 mảng key
+
+    if (Object.keys(FilterDate).length > 0) {
+        find.createdAt = FilterDate;
+    }
+
+    // Tìm kiếm
+
+    if (req.query.keyword) {
+        const keyword = slugify(req.query.keyword, {
+            lower: true
+        });
+        const keywordRegex = new RegExp(keyword);
+        find.slug = keywordRegex;
+    }
+
+
+
+    // console.log("--start---", req.query.dateStart)
+    // console.log("---end-----", req.query.dateEnd)
+    // console.log(find.createdAt)
+
 
     const categoryList = await Category
         .find(find)
@@ -197,4 +238,44 @@ module.exports.deletedPatch = async (req, res) => {
     } catch (error) {
         req.flash("error", "Xóa danh mục thất bại!");
     }
+}
+
+// -------------- ChangeMulti -----------
+module.exports.changeMultiPatch = async (req, res) => {
+    try {
+        const { option, ids } = req.body;
+
+        switch (option) {
+            case "active":
+            case "inactive":
+                await Category.updateMany({
+                    _id: { $in: ids }
+                }, {
+                    status: option
+                });
+                req.flash("success", "Đổi trạng thái thành công!");
+                break;
+            case "delete":
+                await Category.updateMany({
+                    _id: { $in: ids }
+                }, {
+                    deleted: true,
+                    deletedBy: req.account.id,
+                    deletedAt: Date.now()
+                });
+                req.flash("success", "Xóa thành công!");
+                break;
+        }
+
+        res.json({
+            code: "success"
+        })
+    } catch (error) {
+        res.json({
+            code: "error",
+            message: "Id không tồn tại trong hệ thông!"
+        })
+    }
+
+
 }
