@@ -979,3 +979,33 @@ if (search) {
 
 
 //end
+
+
+// Pagination 
+const Pagination = document.querySelector("[pagination]")
+
+if (Pagination) {
+  const url = new URL(window.location.href) // tạo 1 url tại đia chỉ hiện tại
+
+  Pagination.addEventListener("change", () => {
+    const option = Pagination.value
+    if (option) {
+      url.searchParams.set("page", option)
+    } else {
+      url.searchParams.delete("page")
+    }
+    console.log(option)
+
+    window.location.href = url.href
+  })
+
+  // Hiển thị mặc định
+  const valueCurrent = url.searchParams.get("page")
+  if (valueCurrent) {
+    Pagination.value = valueCurrent
+  }
+
+
+}
+
+// end
