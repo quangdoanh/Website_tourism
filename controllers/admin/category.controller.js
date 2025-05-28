@@ -3,6 +3,7 @@ const Category = require("../../models/category.model")
 const accountAdmin = require("../../models/accountAdmin.model")
 
 const slugify = require('slugify');
+slugify.extend({ 'đ': 'd', 'Đ': 'D' });
 
 const CategoryHelpers = require("../../helpers/category.helper")
 
@@ -160,7 +161,9 @@ module.exports.createPost = async (req, res) => {
 
 
     const newRecord = new Category(req.body);
-    await newRecord.save();
+    const RecordNew = await newRecord.save();
+
+    console.log(RecordNew)
 
     req.flash("success", "Tạo danh mục thành công!");
 
@@ -186,6 +189,7 @@ module.exports.edit = async (req, res) => {
             _id: id,
             deleted: false
         })
+
 
         res.render("admin/pages/category-edit", {
             pageTitle: "Chỉnh sửa danh mục",

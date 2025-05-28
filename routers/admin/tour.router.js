@@ -25,8 +25,24 @@ route.post(
     tourController.createPost
 )
 
+route.get('/edit/:id', tourController.edit);
 
+route.patch(
+    '/edit/:id',
+    upload.single('avatar'),
+    tourValidate.createPost,
+    tourController.editPatch
+)
+route.patch('/delete/:id', tourController.deletePatch)
 
 route.get('/trash', tourController.trash);
+
+route.patch('/undo/:id', tourController.undoPatch)
+
+route.patch('/delete-destroy/:id', tourController.deleteDestroyPatch)
+
+route.patch('/change-multi', tourController.changeMultiPatch)
+
+route.patch('/trash/change-multi', tourController.trashChangeMultiPatch)
 
 module.exports = route;

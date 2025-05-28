@@ -280,6 +280,7 @@ if (tourCreateForm) {
       }
     ])
     .onSuccess((event) => {
+
       const name = event.target.name.value;
       const category = event.target.category.value;
       const position = event.target.position.value;
@@ -376,6 +377,120 @@ if (tourCreateForm) {
     ;
 }
 // End Tour Create Form
+
+// Tour edit Form
+const tourEditForm = document.querySelector("#tour-edit-form");
+if (tourEditForm) {
+  console.log("chạy vào đây")
+  const validation = new JustValidate('#tour-edit-form');
+
+  validation
+    .addField('#name', [
+      {
+        rule: 'required',
+        errorMessage: 'Vui lòng nhập tên tour!'
+      }
+    ])
+    .onSuccess((event) => {
+      const id = event.target.id.value
+      const name = event.target.name.value;
+      const category = event.target.category.value;
+      const position = event.target.position.value;
+      const status = event.target.status.value;
+      const avatars = filePond.avatar.getFiles();
+      let avatar = null;
+      if (avatars.length > 0) {
+        avatar = avatars[0].file;
+      }
+      const priceAdult = event.target.priceAdult.value;
+      const priceChildren = event.target.priceChildren.value;
+      const priceBaby = event.target.priceBaby.value;
+      // Giá mới 
+      const priceNewAdult = event.target.priceNewAdult.value;
+      const priceNewChildren = event.target.priceNewChildren.value;
+      const priceNewBaby = event.target.priceNewBaby.value;
+      // Slot
+      const stockAdult = event.target.stockAdult.value;
+      const stockChildren = event.target.stockChildren.value;
+      const stockBaby = event.target.stockBaby.value;
+      const locations = [];
+      const time = event.target.time.value;
+      const vehicle = event.target.vehicle.value;
+      // Ngày khởi hàng
+      const departureDate = event.target.departureDate.value;
+      const information = tinymce.get("information").getContent();
+      // Lịch trình : title & desc
+      const schedules = [];
+
+      // locations
+      const listElementLocation = tourEditForm.querySelectorAll('input[name="locations"]:checked');
+      listElementLocation.forEach(input => {
+        locations.push(input.value);
+      });
+      // End locations
+
+      // schedules
+      const listElementScheduleItem = tourEditForm.querySelectorAll('.inner-schedule-item');
+      listElementScheduleItem.forEach(scheduleItem => {
+        const input = scheduleItem.querySelector("input");
+        const title = input.value;
+
+        const textarea = scheduleItem.querySelector("textarea");
+        const idTextarea = textarea.id;
+        const description = tinymce.get(idTextarea).getContent();
+
+        schedules.push({
+          title: title,
+          description: description
+        });
+      });
+      // End schedules
+
+
+      const formData = new FormData()
+      formData.append("name", name);
+      formData.append("category", category);
+      formData.append("position", position);
+      formData.append("status", status);
+      formData.append("avatar", avatar);
+      formData.append("priceAdult", priceAdult);
+      formData.append("priceChildren", priceChildren);
+      formData.append("priceBaby", priceBaby);
+      formData.append("priceNewAdult", priceNewAdult);
+      formData.append("priceNewChildren", priceNewChildren);
+      formData.append("priceNewBaby", priceNewBaby);
+      formData.append("stockAdult", stockAdult);
+      formData.append("stockChildren", stockChildren);
+      formData.append("stockBaby", stockBaby);
+      formData.append("locations", JSON.stringify(locations));
+      formData.append("time", time);
+      formData.append("vehicle", vehicle);
+      formData.append("departureDate", departureDate);
+      formData.append("information", information);
+      formData.append("schedules", JSON.stringify(schedules));
+
+      fetch(`/${pathAdmin}/tour/edit/${id}`, {
+        method: "PATCH",
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            alert(data.message);
+          }
+
+          if (data.code == "success") {
+            window.location.reload();
+
+          }
+        })
+
+
+    })
+    ;
+}
+// End Tour edit Form
+
 
 // Order Edit Form
 const orderEditForm = document.querySelector("#order-edit-form");
@@ -888,6 +1003,53 @@ if (filterDateEnd) {
 // end
 
 
+// Filter Category 
+const filterCaregory = document.querySelector("[filter-category]")
+
+if (filterCaregory) {
+  const url = new URL(window.location.href)
+  filterCaregory.addEventListener("change", () => {
+    const value = filterCaregory.value
+
+    if (value) {
+      url.searchParams.set("category", value)
+    } else {
+      url.searchParams.delete("category")
+    }
+
+    window.location.href = url.href
+  })
+
+  // hiển thị mặc định
+  const valueCurrent = url.searchParams.get("category");
+  if (valueCurrent) {
+    filterCaregory.value = valueCurrent
+  }
+}
+// Filter price
+const filterPrice = document.querySelector("[filter-price]")
+
+if (filterPrice) {
+  const url = new URL(window.location.href)
+  filterPrice.addEventListener("change", () => {
+    const value = filterPrice.value
+
+    if (value) {
+      url.searchParams.set("price", value)
+    } else {
+      url.searchParams.delete("price")
+    }
+
+    window.location.href = url.href
+  })
+
+  // hiển thị mặc định
+  const valueCurrent = url.searchParams.get("price");
+  if (valueCurrent) {
+    filterPrice.value = valueCurrent
+  }
+}
+
 // Reset filter
 const filterReset = document.querySelector("[filter-reset]")
 if (filterReset) {
@@ -914,7 +1076,7 @@ if (checkAll) {
 }
 // 
 
-// Change multi
+// Change multi 
 const changeMulti = document.querySelector("[change-multi]")
 
 if (changeMulti) {
@@ -926,6 +1088,9 @@ if (changeMulti) {
 
   button.addEventListener("click", () => {
 
+    console.log("chạy vào day")
+
+    const api = button.getAttribute("data-api")
     const Listchecked = document.querySelectorAll("[check-item]:checked")
 
     console.log(Listchecked.length)
@@ -945,6 +1110,7 @@ if (changeMulti) {
         ids: ids
       };
 
+      // CATEGORY
       fetch(`/${pathAdmin}/category/change-multi`, {
         method: "PATCH",
         headers: {
@@ -960,6 +1126,44 @@ if (changeMulti) {
 
           if (data.code == "success") {
             window.location.reload();
+          }
+        })
+
+      //TOUR
+      fetch(`/${pathAdmin}/tour/change-multi`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataFinal)
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            alert(data.message);
+          }
+
+          if (data.code == "success") {
+            window.location.reload();
+          }
+        })
+      // Trash 
+      fetch(`/${pathAdmin}/tour/trash/change-multi`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataFinal)
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            alert(data.message);
+
+          }
+
+          if (data.code == "success") {
+            // window.location.reload();
           }
         })
 
