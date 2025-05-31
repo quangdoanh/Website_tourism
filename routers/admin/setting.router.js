@@ -23,11 +23,26 @@ route.patch(
     settingController.websiteInfoPatch
 )
 
-
+// Account
 
 route.get('/account-admin/list', settingController.accountAdminlist);
 route.get('/account-admin/create', settingController.accountAdmincreate);
+route.post(
+    '/account-admin/create',
+    upload.single("avatar"),
+    settingController.accountAdminCreatePost
+)
 
+route.get('/account-admin/edit/:id', settingController.accountAdminEdit)
+route.patch(
+    '/account-admin/edit/:id',
+    upload.single("avatar"),
+    settingController.accountAdminEditPatch
+)
+
+
+
+// Role
 route.get('/role/list', settingController.Rolelist);
 
 route.get('/role/create', settingController.RoleCreate);
