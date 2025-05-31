@@ -5,7 +5,7 @@ const accountAdmin = require("../../models/accountAdmin.model")
 const City = require("../../models/city.model")
 
 const slugify = require('slugify');
-slugify.extend({ 'đ': 'd', 'Đ': 'D' });
+slugify.extend({ 'đ': 'd', 'Đ': 'D' }); // tránh d thành ds
 
 const moment = require("moment/moment")
 const { object } = require("joi")
@@ -498,7 +498,7 @@ module.exports.undoPatch = async (req, res) => {
     }
 
 }
-module.exports.deleteDestroyPatch = async (req, res) => {
+module.exports.deleteDestroyDelete = async (req, res) => {
 
 
     try {

@@ -39,7 +39,7 @@ route.get('/trash', tourController.trash);
 
 route.patch('/undo/:id', tourController.undoPatch)
 
-route.patch('/delete-destroy/:id', tourController.deleteDestroyPatch)
+route.patch('/delete-destroy/:id', tourController.deleteDestroyDelete)
 
 route.patch('/change-multi', tourController.changeMultiPatch)
 

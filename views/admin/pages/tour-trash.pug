@@ -13,7 +13,7 @@ block main
             option(value="undo") Khôi phục
             option(value="delete-destroy") Xóa vĩnh viễn
         .inner-item
-          button Áp dụng
+          button(data-api=`/${pathAdmin}/tour/trash/change-multi`) Áp dụng
       .inner-search
         <i class="fa-solid fa-magnifying-glass"  > </i>
         input(type="text" placeholder="Tìm kiếm" search)

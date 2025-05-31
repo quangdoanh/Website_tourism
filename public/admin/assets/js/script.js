@@ -81,8 +81,8 @@ const listFilepondImage = document.querySelectorAll("[filepond-image]");
 let filePond = {};
 if (listFilepondImage.length > 0) {
   listFilepondImage.forEach(filepondImage => {
-    FilePond.registerPlugin(FilePondPluginImagePreview);
-    FilePond.registerPlugin(FilePondPluginFileValidateType);
+    FilePond.registerPlugin(FilePondPluginImagePreview);  // cho xem trước
+    FilePond.registerPlugin(FilePondPluginFileValidateType); // giới hạn định dạng
 
     let files = null;
     const elementImageDefault = filepondImage.closest("[image-default]");
@@ -96,7 +96,7 @@ if (listFilepondImage.length > 0) {
         ]
       }
     }
-
+    // lưu instance này vào object filePond  với key là filepondImage.name
     filePond[filepondImage.name] = FilePond.create(filepondImage, {
       labelIdle: '+',
       files: files
@@ -569,13 +569,31 @@ if (settingWebsiteInfoForm) {
       const address = event.target.address.value;
       const logos = filePond.logo.getFiles();
       let logo = null;
+
       if (logos.length > 0) {
         logo = logos[0].file;
+        const elementImageDefault = event.target.logo.closest("[image-default]");
+        const imageDefault = elementImageDefault.getAttribute("image-default");
+        console.log("kq:", logo.name)
+        if (imageDefault.includes(logo.name)) {
+          logo = null;
+        }
+        console.log("div:", elementImageDefault);
+        console.log("kq:", imageDefault)
+        console.log("input:", event.target.logo);
+
+
       }
       const favicons = filePond.favicon.getFiles();
       let favicon = null;
       if (favicons.length > 0) {
         favicon = favicons[0].file;
+        const elementImageDefault = event.target.favicon.closest("[image-default]");
+        const imageDefault = elementImageDefault.getAttribute("image-default");
+        if (imageDefault.includes(favicon.name)) {
+          favicon = null;
+        }
+
       }
 
       console.log(websiteName);
@@ -584,6 +602,30 @@ if (settingWebsiteInfoForm) {
       console.log(address);
       console.log(logo);
       console.log(favicon);
+      const formData = new FormData();
+      formData.append("websiteName", websiteName);
+      formData.append("phone", phone);
+      formData.append("email", email);
+      formData.append("address", address);
+      formData.append("logo", logo);
+      formData.append("favicon", favicon);
+
+      fetch(`/${pathAdmin}/setting/info`, {
+        method: "PATCH",
+        body: formData,
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            alert(data.message);
+          }
+
+          if (data.code == "success") {
+            window.location.reload();
+          }
+        })
+
+
     })
     ;
 }
@@ -714,6 +756,30 @@ if (settingRoleCreateForm) {
         permissions.push(input.value);
       });
       // End permissions
+      const dataFinal = {
+        name: name,
+        description: description,
+        permissions: permissions
+      };
+
+      fetch(`/${pathAdmin}/setting/role/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataFinal),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            alert(data.message);
+          }
+
+          if (data.code == "success") {
+            window.location.href = `/${pathAdmin}/setting/role/list`;
+          }
+        })
+
 
       console.log(name);
       console.log(description);
@@ -871,7 +937,7 @@ if (alertTime) {
 }
 // End Alert
 
-// Delete category 
+// Delete  
 const deleteList = document.querySelectorAll("[button-delete]")
 
 if (deleteList.length > 0) {
@@ -879,6 +945,7 @@ if (deleteList.length > 0) {
     button.addEventListener("click", () => {
       const api = button.getAttribute("data-api")
 
+      console.log(api)
 
       fetch(api, {
         method: "PATCH"
@@ -1088,14 +1155,15 @@ if (changeMulti) {
 
   button.addEventListener("click", () => {
 
-    console.log("chạy vào day")
 
     const api = button.getAttribute("data-api")
+
+    console.log(api)
     const Listchecked = document.querySelectorAll("[check-item]:checked")
 
-    console.log(Listchecked.length)
+    //console.log(Listchecked.length)
     const option = select.value
-    console.log(option)
+    //console.log(option)
 
     if (option && Listchecked.length > 0) {
       console.log("chạy vào dây")
@@ -1110,8 +1178,8 @@ if (changeMulti) {
         ids: ids
       };
 
-      // CATEGORY
-      fetch(`/${pathAdmin}/category/change-multi`, {
+
+      fetch(api, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json"
@@ -1122,48 +1190,11 @@ if (changeMulti) {
         .then(data => {
           if (data.code == "error") {
             alert(data.message);
+
           }
 
           if (data.code == "success") {
             window.location.reload();
-          }
-        })
-
-      //TOUR
-      fetch(`/${pathAdmin}/tour/change-multi`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dataFinal)
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.code == "error") {
-            alert(data.message);
-          }
-
-          if (data.code == "success") {
-            window.location.reload();
-          }
-        })
-      // Trash 
-      fetch(`/${pathAdmin}/tour/trash/change-multi`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dataFinal)
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.code == "error") {
-            alert(data.message);
-
-          }
-
-          if (data.code == "success") {
-            // window.location.reload();
           }
         })
 
@@ -1236,3 +1267,56 @@ if (Pagination) {
 }
 
 // end
+
+// Setting Role Edit Form
+const settingRoleEditForm = document.querySelector("#setting-role-edit-form");
+if (settingRoleEditForm) {
+  const validation = new JustValidate('#setting-role-edit-form');
+
+  validation
+    .addField('#name', [
+      {
+        rule: 'required',
+        errorMessage: 'Vui lòng nhập tên nhóm quyền!'
+      },
+    ])
+    .onSuccess((event) => {
+      const id = event.target.id.value;
+      const name = event.target.name.value;
+      const description = event.target.description.value;
+      const permissions = [];
+
+      // permissions
+      const listElementPermission = settingRoleEditForm.querySelectorAll('input[name="permissions"]:checked');
+      listElementPermission.forEach(input => {
+        permissions.push(input.value);
+      });
+      // End permissions
+
+      const dataFinal = {
+        name: name,
+        description: description,
+        permissions: permissions
+      };
+
+      fetch(`/${pathAdmin}/setting/role/edit/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataFinal),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            alert(data.message);
+          }
+
+          if (data.code == "success") {
+            window.location.reload();
+          }
+        })
+    })
+    ;
+}
+// End Setting Role Edit Form

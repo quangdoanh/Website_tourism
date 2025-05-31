@@ -50,7 +50,7 @@ block main
             option(value="inactive") Dừng hoạt động
             option(value="delete") Xóa
         .inner-item
-          button Áp dụng
+          button(data-api = `/${pathAdmin}/tour/change-multi`) Áp dụng
       .inner-search
         <i class="fa-solid fa-magnifying-glass"></i>
         input(type="text" placeholder="Tìm kiếm" search)
@@ -100,10 +100,10 @@ block main
                 else if (item.status == "inactive")
                   .badge.badge-red Tạm dừng
               td
-                div #{item.createdByFullName}
+                div #{item.nameCeatedBy}
                 div.inner-time #{item.createdAtFormat}
               td
-                div #{item.updatedByFullName}
+                div #{item.namedUpdatedBy}
                 div.inner-time #{item.updatedAtFormat}
               td
                 .inner-buttons
