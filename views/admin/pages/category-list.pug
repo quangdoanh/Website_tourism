@@ -19,7 +19,7 @@ block main
         select(filter-name)
           option(value="") Người tạo
           each item in accountAdmin
-            option(value=item.id) #{item.name}
+            option(value=item.id) #{item.name || ""}
       .inner-item.inner-date
         input(type="date" filter-start-date)
         span -
@@ -90,7 +90,7 @@ block main
                     class="inner-edit"
                   ) <i class="fa-regular fa-pen-to-square"></i>
                   a(class="inner-delete"
-                     button-delete
+                     button-delete = undefined
                      data-api=`/${pathAdmin}/category/delete/${item.id}`
                   ) <i class="fa-regular fa-trash-can"></i>
             

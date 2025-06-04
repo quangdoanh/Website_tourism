@@ -95,9 +95,11 @@ module.exports.list = async (req, res) => {
             const inforAccountCreated = await accountAdmin.findOne({
                 _id: item.createdBy,
             })
+            console.log("namecategory", inforAccountCreated)
             item.nameCeatedBy = inforAccountCreated.name;
 
         }
+
 
         if (item.updatedBy) {
             const inforAccountUpdate = await accountAdmin.findOne({

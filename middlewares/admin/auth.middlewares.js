@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const AccountAdmin = require('../../models/accountAdmin.model');
 const Role = require('../../models/role.model');
+const { dashboard } = require('../../controllers/admin/dashboard.controller');
 
 module.exports.verifyToken = async (req, res, next) => {
 
@@ -37,13 +38,18 @@ module.exports.verifyToken = async (req, res, next) => {
 
         if (roleInfor) {
             existAccount.roleName = roleInfor.name
+            req.permissions = roleInfor.permissions;
+            res.locals.permissions = roleInfor.permissions
+        } else {
+            res.locals.permissions = "setting-view"
+            req.permissions = "setting-view"
         }
         //lấy thông tin account
         req.account = existAccount;
         console.log("filjs:", req.account)
-
         // gửi tên account về fe (bug)
         res.locals.account = existAccount
+
         console.log("filebug:", res.locals.account)
 
 

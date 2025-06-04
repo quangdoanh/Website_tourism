@@ -177,6 +177,18 @@ module.exports.accountAdminEditPatch = async (req, res) => {
             req.body.password = await bcrypt.hash(req.body.password, salt); // Mã hóa mật khẩu
         }
 
+        const exitsEmail = await AccountAdmin.findOne({
+            email: req.body.email
+        })
+
+        if (exitsEmail) {
+            req.flash('error', 'Email này đã được dùng!');
+            res.json({
+                code: "success"
+            });
+            return
+        }
+
         await AccountAdmin.updateOne({
             _id: id,
             deleted: false

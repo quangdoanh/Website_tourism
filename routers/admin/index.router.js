@@ -19,6 +19,10 @@ route.use((req, res, next) => {
 })
 
 // 
+const settingMiddleware = require("../../middlewares/client/setting.middlewares");
+
+route.use(settingMiddleware.websiteInfo);
+
 
 route.use('/account', accountRouter);
 route.use('/dashboard', authMiddleware.verifyToken, dashboardRouter);
