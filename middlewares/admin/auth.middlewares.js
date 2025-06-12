@@ -46,11 +46,11 @@ module.exports.verifyToken = async (req, res, next) => {
         }
         //lấy thông tin account
         req.account = existAccount;
-        console.log("filjs:", req.account)
+        //console.log("filjs:", req.account)
         // gửi tên account về fe (bug)
         res.locals.account = existAccount
 
-        console.log("filebug:", res.locals.account)
+        //console.log("filebug:", res.locals.account)
 
 
 

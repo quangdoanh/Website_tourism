@@ -4,16 +4,22 @@ const route = require("express").Router()
 const tourRouter = require("./tour.router")
 const homeRouter = require("./home.router")
 const cartRouter = require("./cart.router")
+const contactRoutes = require("./contact.router");
+const categoryRoutes = require("./category.router");
+const searchRoutes = require("./search.router");
 
 const settingMiddleware = require("../../middlewares/client/setting.middlewares");
 const categoryMiddleware = require("../../middlewares/client/category.middleware");
 
+
 route.use(settingMiddleware.websiteInfo);
 route.use(categoryMiddleware.list);
 
-route.use('/tours', tourRouter)
+route.use('/tour', tourRouter)
 route.use('/', homeRouter)
 route.use('/carts', cartRouter)
-
+route.use('/contact', contactRoutes)
+route.use('/category', categoryRoutes)
+route.use('/search', searchRoutes)
 
 module.exports = route;

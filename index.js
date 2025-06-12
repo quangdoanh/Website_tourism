@@ -54,18 +54,18 @@ const clientRouters = require("./routers/client/index.router")
 
 
 // Thiết lập views
-app.set('views', path.join(__dirname, "views"));
-app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, "views")); // Nói cho Express biết nơi chứa các file giao diện .pug  ----Ví dụ: khi gọi res.render('home'), Express sẽ tìm views/home.pug.
+app.set('view engine', 'pug'); // Cài đặt template engine là pug Giúp bạn viết HTML rút gọn
 // End thiệt lập views
 
 //  Thiết lập mục chứa file tĩnh của Frontend
-app.use(express.static(path.join(__dirname, "public")))
+app.use(express.static(path.join(__dirname, "public"))) // dùng Express static, bạn có thể gọi từ HTML <link rel="stylesheet" href="/css/style.css">
 // End thiệt lập public
 
 //  Thiet lap Router 
 
-app.use(`/${variableConfig.pathAdmin}`, adminRouters)
-app.use("/", clientRouters)
+app.use(`/${variableConfig.pathAdmin}`, adminRouters)  // route dành cho admin vào đường dẫn như /admin/category
+app.use("/", clientRouters) // gắn các route phía người dùng (client) vào trang chủ vd: /product
 
 //  End Thiet lap Router
 

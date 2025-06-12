@@ -1,20 +1,86 @@
 // Models
+const Category = require("../../models/category.model");
 const Tour = require("../../models/tour.model")
+const City = require("../../models/city.model");
+const moment = require("moment");
 
-module.exports.list = async (req, res) => {
-    const tourList = await (Tour.find({}));
 
-    console.log(tourList);
-
-    res.render('clients/pages/tour-list', {
-        pageTitle: "Doanh dep zai"
-        // tourList: tourList
-    })
-}
 module.exports.detail = async (req, res) => {
 
-    res.render('clients/pages/detail-tour', {
-        pageTitle: "Chi tiet tour",
+    const slug = req.params.slug;
 
+    // Tìm tour theo slug
+    const tourDetail = await Tour.findOne({
+        slug: slug,
+        status: "active",
+        deleted: false
     })
+
+    if (tourDetail) {
+        // Breadcrumb
+        const breadcrumb = {
+            image: tourDetail.avatar,
+            title: tourDetail.name,
+            list: [
+                {
+                    link: "/",
+                    title: "Trang Chủ"
+                }
+            ]
+        };
+
+        const category = await Category.findOne({
+            _id: tourDetail.category,
+            deleted: false,
+            status: "active"
+        })
+
+        if (category) {
+            // Tìm danh mục cha
+            if (category.parent) {
+                const parentCategory = await Category.findOne({
+                    _id: category.parent,
+                    deleted: false,
+                    status: "active"
+                })
+
+                if (parentCategory) {
+                    breadcrumb.list.push({
+                        link: `/category/${parentCategory.slug}`,
+                        title: parentCategory.name
+                    })
+                }
+            }
+
+            // Thêm danh mục hiện tại
+            breadcrumb.list.push({
+                link: `/category/${category.slug}`,
+                title: category.name,
+            })
+        }
+
+        breadcrumb.list.push({
+            link: `/tour/detail/${slug}`,
+            title: tourDetail.name
+        });
+        // End Breadcrumb
+
+        // Thông tin chii tiết tour
+        tourDetail.departureDateFormat = moment(tourDetail.departureDate).format("DD/MM/YYYY");
+
+        const cityList = await City.find({
+            _id: { $in: tourDetail.locations }
+        })
+
+
+        res.render("clients/pages/detail-tour", {
+            pageTitle: "Chi tiết tour",
+            breadcrumb: breadcrumb,
+            tourDetail: tourDetail,
+            cityList: cityList
+        })
+    } else {
+        res.redirect("/");
+    }
+
 }

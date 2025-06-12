@@ -293,10 +293,45 @@ if (emailForm) {
         .onSuccess((event) => {
             const email = event.target.email.value;
             console.log(email);
+
+            const dataFinal = {
+                email: email,
+            };
+
+            fetch(`/contact/create`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(dataFinal),
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.code == "error") {
+                        alert(data.message);
+                    }
+
+                    if (data.code == "success") {
+                        window.location.reload();
+                    }
+                })
+
         })
         ;
 }
 // End Email Form
+
+// Alert
+const alertTime = document.querySelector("[alert-time]");
+if (alertTime) {
+    let time = alertTime.getAttribute("alert-time");
+    time = time ? parseInt(time) : 4000;
+    setTimeout(() => {
+        alertTime.remove(); // Xóa phần tử khỏi giao diện
+    }, time);
+}
+// End Alert
+
 
 // Coupon Form
 const couponForm = document.querySelector("#coupon-form");
@@ -374,3 +409,185 @@ if (orderForm) {
     // End List Input Method
 }
 // End Order Form
+
+// Box Filter Tour
+
+const boxFilter = document.querySelector(".box-filter");
+console.log(boxFilter)
+
+if (boxFilter) {
+    const url = new URL(`${window.location.origin}/search`)
+
+    const buttonApply = boxFilter.querySelector(".inner-button");
+
+    const filterList = [
+        "locationFrom",
+        "locationTo",
+        "departureDate",
+        "stockAdult",
+        "stockChildren",
+        "stockBaby",
+        "price"
+    ];
+
+    buttonApply.addEventListener("click", () => {
+        filterList.forEach(name => {
+            const value = boxFilter.querySelector(`[name="${name}"]`).value;
+            console.log(value)
+            if (value) {
+                url.searchParams.set(name, value);
+            } else {
+                url.searchParams.delete(name);
+            }
+        })
+
+        window.location.href = url.href;
+    })
+}
+//End Box Filter
+
+
+// Form Search
+const formSearch = document.querySelector("[form-search]");
+if (formSearch) {
+    const url = new URL(`${window.location.origin}/search`);
+
+    formSearch.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        // Điểm đến
+        const locationTo = formSearch.locationTo.value;
+        if (locationTo) {
+            url.searchParams.set("locationTo", locationTo);
+        } else {
+            url.searchParams.delete("locationTo");
+        }
+
+        // Số lượng
+        const stockAdult = parseInt(formSearch.querySelector("[stock-adult]").innerHTML);
+        if (stockAdult > 0) {
+            url.searchParams.set("stockAdult", stockAdult);
+        } else {
+            url.searchParams.delete("stockAdult");
+        }
+
+        const stockChildren = parseInt(formSearch.querySelector("[stock-children]").innerHTML);
+        if (stockChildren > 0) {
+            url.searchParams.set("stockChildren", stockChildren);
+        } else {
+            url.searchParams.delete("stockChildren");
+        }
+
+        const stockBaby = parseInt(formSearch.querySelector("[stock-baby]").innerHTML);
+        if (stockBaby > 0) {
+            url.searchParams.set("stockBaby", stockBaby);
+        } else {
+            url.searchParams.delete("stockBaby");
+        }
+
+        // Ngày khởi hành
+        const departureDate = formSearch.departureDate.value;
+        if (departureDate) {
+            url.searchParams.set("departureDate", departureDate);
+        } else {
+            url.searchParams.delete("departureDate");
+        }
+
+        window.location.href = url.href;
+        console.log("url:", url.href);
+
+    })
+}
+// End Form Search
+
+// Box Tour Detail ;
+
+const boxTourDetail = document.querySelector(".box-tour-detail");
+if (boxTourDetail) {
+    // Bước 1
+    const inputStockAdult = document.querySelector("[input-stock-adult]");
+    const inputStockChildren = document.querySelector("[input-stock-children]");
+    const inputStockBaby = document.querySelector("[input-stock-baby]");
+
+    // Bước 3
+    const drawBoxDetail = () => {
+        const quantityAdult = parseInt(inputStockAdult.value);
+        const quantityChildren = parseInt(inputStockChildren.value);
+        const quantityBaby = parseInt(inputStockBaby.value);
+
+        const stockAdult = document.querySelector("[stock-adult]");
+        const stockChildren = document.querySelector("[stock-children]");
+        const stockBaby = document.querySelector("[stock-baby]");
+
+        stockAdult.innerHTML = quantityAdult;
+        stockChildren.innerHTML = quantityChildren;
+        stockBaby.innerHTML = quantityBaby;
+
+        const priceAdult = parseInt(inputStockAdult.getAttribute("price"));
+        const priceChildren = parseInt(inputStockChildren.getAttribute("price"));
+        const priceBaby = parseInt(inputStockBaby.getAttribute("price"));
+        const totalPrice = (quantityAdult * priceAdult) + (quantityChildren * priceChildren) + (quantityBaby * priceBaby);
+        const elementTotalPrice = document.querySelector("[total-price]");
+        elementTotalPrice.innerHTML = totalPrice.toLocaleString("vi-VN");
+    }
+
+    // Bước 2
+    inputStockAdult.addEventListener("change", drawBoxDetail);
+    inputStockChildren.addEventListener("change", drawBoxDetail);
+    inputStockBaby.addEventListener("change", drawBoxDetail);
+
+    // Bước 4
+    const buttonAddToCart = boxTourDetail.querySelector(".inner-button-add-cart");
+    buttonAddToCart.addEventListener("click", () => {
+        const tourId = buttonAddToCart.getAttribute("tour-id");
+        const quantityAdult = parseInt(inputStockAdult.value);
+        const quantityChildren = parseInt(inputStockChildren.value);
+        const quantityBaby = parseInt(inputStockBaby.value);
+        const locationFrom = boxTourDetail.querySelector("[location-from]").value;
+
+        if (quantityAdult > 0 || quantityChildren > 0 || quantityBaby > 0) {
+            const cartItem = {
+                tourId: tourId,
+                quantityAdult: quantityAdult,
+                quantityChildren: quantityChildren,
+                quantityBaby: quantityBaby,
+                locationFrom: locationFrom
+            };
+
+            let cart = JSON.parse(localStorage.getItem("cart"));
+            if (!Array.isArray(cart)) {
+                cart = [];
+                localStorage.setItem("cart", JSON.stringify(cart));
+            }
+
+            // bi loi 
+            const indexItemExist = cart.findIndex(item => item.tourId == tourId);
+            if (indexItemExist != -1) {
+                cart[indexItemExist] = cartItem;
+            } else {
+                cart.push(cartItem);
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            window.location.href = "/cart";
+        }
+    })
+}
+// End Box Tour Detail
+
+// Initial Cart
+const miniCart = document.querySelector("[mini-cart]");
+if (miniCart) {
+    const cart = JSON.parse(localStorage.getItem("cart"));
+    miniCart.innerHTML = cart.length;
+}
+
+// End Initial Cart
+
+
+
+//http://localhost:3000/search?locationFrom=682959bf741d1119ac211494&locationTo=682959bf741d1119ac211495&departureDate=2025-06-05&stockAdult=5&stockChildren=10&stockBaby=8&price=1000000-3000000
+
+//http://localhost:3000/category/tour-mien-bac/search?locationFrom=682959bf741d1119ac21149c&locationTo=682959bf741d1119ac2114a2&departureDate=2025-06-06&stockAdult=5&stockChildren=8&stockBaby=12&price=1000000-3000000
+
+// End Box Filter Tour

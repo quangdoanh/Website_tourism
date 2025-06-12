@@ -20,7 +20,10 @@ route.get('/create', tourController.create);
 
 route.post(
     '/create',
-    upload.single('avatar'),
+    upload.fields([
+        { name: 'avatar', maxCount: 1 },
+        { name: 'images', maxCount: 10 }
+    ]),
     tourValidate.createPost,
     tourController.createPost
 )
@@ -29,7 +32,10 @@ route.get('/edit/:id', tourController.edit);
 
 route.patch(
     '/edit/:id',
-    upload.single('avatar'),
+    upload.fields([
+        { name: 'avatar', maxCount: 1 },
+        { name: 'images', maxCount: 10 }
+    ]),
     tourValidate.createPost,
     tourController.editPatch
 )

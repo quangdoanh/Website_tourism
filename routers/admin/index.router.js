@@ -1,4 +1,4 @@
-const route = require("express").Router()
+const route = require("express").Router() // để tạo router riêng biệt cho nhóm đường dẫn
 
 // Routers con
 const accountRouter = require("./account.router")
@@ -10,6 +10,8 @@ const userRouter = require("./user.router")
 const contactRouter = require("./contact.router")
 const settingRouter = require("./setting.router")
 const profileRouter = require("./profile.router")
+const uploadRoutes = require("./upload.router");
+
 const authMiddleware = require("../../middlewares/admin/auth.middlewares")
 
 // NOT SAVE MEMORY CACHE
@@ -33,6 +35,7 @@ route.use('/user', authMiddleware.verifyToken, userRouter);
 route.use('/contact', authMiddleware.verifyToken, contactRouter);
 route.use('/setting', authMiddleware.verifyToken, settingRouter);
 route.use('/profile', authMiddleware.verifyToken, profileRouter);
+route.use('/upload', authMiddleware.verifyToken, uploadRoutes);
 
 // 404 Not Found
 route.get('*', (req, res) => {
