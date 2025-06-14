@@ -17,7 +17,7 @@ route.use(categoryMiddleware.list);
 
 route.use('/tour', tourRouter)
 route.use('/', homeRouter)
-route.use('/carts', cartRouter)
+route.use('/cart', cartRouter)
 route.use('/contact', contactRoutes)
 route.use('/category', categoryRoutes)
 route.use('/search', searchRoutes)
