@@ -381,6 +381,7 @@ if (orderForm) {
       },
     ])
     .onSuccess((event) => {
+
       const fullName = event.target.fullName.value;
       const phone = event.target.phone.value;
       const note = event.target.note.value;
@@ -390,6 +391,66 @@ if (orderForm) {
       console.log(phone);
       console.log(note);
       console.log(method);
+
+      let cart = JSON.parse(localStorage.getItem("cart"));
+
+      // B1 lọc các tour trong giỏ hàng
+      cart = cart.filter(item => {
+        return (item.checked == true) && (item.quantityAdult + item.quantityChildren + item.quantityBaby > 0)
+      })
+      // B2 lấy ra các thuộc tính cần thiết cho đơn hàng lưu vào db
+      cart = cart.map(item => {
+        return {
+          tourId: item.tourId,
+          locationFrom: item.locationFrom,
+          quantityAdult: item.quantityAdult,
+          quantityChildren: item.quantityChildren,
+          quantityBaby: item.quantityBaby
+        }
+      })
+      console.log("Cart:", cart)
+      // B3 Tạo data gửi lên backend
+      if (cart.length > 0) {
+        const dataFinal = {
+          fullName: fullName,
+          phone: phone,
+          note: note,
+          paymentMethod: method,
+          items: cart
+        };
+
+        fetch('/order/create', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // cho server biết kiểu dữ liệu mà client đang gửi.
+          },
+          body: JSON.stringify(dataFinal),
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.code == "error") {
+              console.log('Chạy that bai')
+              alert(data.message);
+            }
+
+            if (data.code == "success") {
+
+              console.log('Chạy thanh cong')
+              // Cập nhật lại giỏ hàng
+              let cart = JSON.parse(localStorage.getItem("cart"));
+              cart = cart.filter(item => item.checked == false);
+              localStorage.setItem("cart", JSON.stringify(cart));
+
+              // Chuyển hướng sang trang đặt hành thành công
+              console.log(data.orderId)
+              window.location.href = `/order/success?orderId=${data.orderId}&phone=${phone}`
+
+            }
+          })
+      } else {
+        alert("Vui lòng đặt ít nhất 1 tour!");
+      }
+
     })
     ;
 
@@ -556,12 +617,12 @@ if (boxTourDetail) {
       };
 
       let cart = JSON.parse(localStorage.getItem("cart"));
-      if (!Array.isArray(cart)) {
-        cart = [];
-        localStorage.setItem("cart", JSON.stringify(cart));
-      }
+      // if (!Array.isArray(cart)) {
+      //   cart = [];
+      //   localStorage.setItem("cart", JSON.stringify(cart));
+      // }
 
-      // bi loi 
+
       const indexItemExist = cart.findIndex(item => item.tourId == tourId);
       if (indexItemExist != -1) {
         cart[indexItemExist] = cartItem;
@@ -577,14 +638,19 @@ if (boxTourDetail) {
 // End Box Tour Detail
 
 // Initial Cart
+const cart = localStorage.getItem("cart");
+if (!cart) {
+  localStorage.setItem("cart", JSON.stringify([]));
+}
+// End Initial Cart
+
+// Mini Cart
 const miniCart = document.querySelector("[mini-cart]");
 if (miniCart) {
   const cart = JSON.parse(localStorage.getItem("cart"));
   miniCart.innerHTML = cart.length;
 }
-
-// End Initial Cart
-
+// End Mini Cart
 
 // Page Cart
 const drawCart = () => {
