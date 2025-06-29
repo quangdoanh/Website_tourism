@@ -215,15 +215,47 @@ module.exports.Rolelist = async (req, res) => {
 
         find.slug = keywordRegex;
     }
+    // Phân trang
+    const limit = 4;
 
+    let page = 1
 
+    if (req.query.page) {
+        const pageCurrent = parseInt(req.query.page);
+        if (pageCurrent > 0) {
+            page = pageCurrent
+        }
+    }
+
+    const skip = (page - 1) * limit
+
+    const totalRole = await Role.find({
+        deleted: false
+    })
+
+    const totalPage = Math.ceil(totalRole.length / limit)
+
+    const pagination = {
+        skip: skip,
+        totalRole: totalRole,
+        totalPage: totalPage
+    }
 
     const roleList = await Role
         .find(find)
+        .sort({
+            createdAt: "desc"
+        })
+        .limit(limit)
+        .skip(skip)
+
+    // End
+
 
     res.render('admin/pages/setting-role-list', {
         pageTitle: "Nhóm quyền",
-        roleList: roleList
+        roleList: roleList,
+        pagination: pagination
     })
 }
 // Change Multil
@@ -415,12 +447,46 @@ module.exports.roleTrash = async (req, res) => {
 
 
 
+    // Phân trang
+    const limit = 4;
+
+    let page = 1
+
+    if (req.query.page) {
+        const pageCurrent = parseInt(req.query.page);
+        if (pageCurrent > 0) {
+            page = pageCurrent
+        }
+    }
+
+    const skip = (page - 1) * limit
+
+    const totalRole = await Role.find({
+        deleted: true
+    })
+
+    const totalPage = Math.ceil(totalRole.length / limit)
+
+    const pagination = {
+        skip: skip,
+        totalRole: totalRole,
+        totalPage: totalPage
+    }
+
     const roleList = await Role
         .find(find)
+        .sort({
+            createdAt: "desc"
+        })
+        .limit(limit)
+        .skip(skip)
+
+    // End
 
     res.render('admin/pages/setting-role-trash', {
         pageTitle: "Thùng rác",
-        roleList: roleList
+        roleList: roleList,
+        pagination: pagination
     })
 }
 

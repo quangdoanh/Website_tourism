@@ -53,3 +53,8 @@ block main
                   ) <i class="fa-regular fa-trash-can"></i>
 
   //- End Section 6
+  .section-7
+    span(class="inner-label") Hiển thị #{pagination.skip + 1} - #{roleList.length + pagination.skip} của #{pagination.totalRole.length}
+      select(class="inner-pagination" pagination)
+        - for(let i = 1 ; i <= pagination.totalPage ; i++)
+              option(value=i) Trang #{i}

@@ -33,7 +33,8 @@ module.exports.verifyToken = async (req, res, next) => {
 
         //--- Cấp quyền những tài khoản không có quyền sẽ không vào được
         const roleInfor = await Role.findOne({
-            _id: existAccount.role
+            _id: existAccount.role,
+            deleted: false
         })
 
         if (roleInfor) {
@@ -41,8 +42,7 @@ module.exports.verifyToken = async (req, res, next) => {
             req.permissions = roleInfor.permissions;
             res.locals.permissions = roleInfor.permissions
         } else {
-            res.locals.permissions = "setting-view"
-            req.permissions = "setting-view"
+            window.location.href = `/${pathAdmin}/account/login`;
         }
         //lấy thông tin account
         req.account = existAccount;
