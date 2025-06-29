@@ -47,19 +47,19 @@ module.exports.permissionList = [
     },
 
     {
-        label: "Xem đơn hàng",
+        label: "Xem orders",
         value: "order-view"
     },
     {
-        label: "Sửa đơn hàng",
+        label: "Sửa order",
         value: "order-edit"
     },
     {
-        label: "Xóa đơn hàng",
+        label: "Xóa order",
         value: "order-delete"
     },
     {
-        label: "Thùng rác đơn hàng",
+        label: "Thùng rác order",
         value: "order-trash"
     },
 

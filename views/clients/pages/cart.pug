@@ -11,14 +11,14 @@ block main
             | Quay lại mua hàng
             i.fa-solid.fa-angle-right
         .inner-tour-list(cart-list)
-        .inner-coupon
-          form#coupon-form(action="")
-            input#coupon-input(
-              name="coupon" 
-              placeholder="Nhập mã giảm giá" 
-              type="text"
-              )
-            button(type="submit") Dùng Mã
+        //- .inner-coupon
+        //-   form#coupon-form(action="")
+        //-     input#coupon-input(
+        //-       name="coupon" 
+        //-       placeholder="Nhập mã giảm giá" 
+        //-       type="text"
+        //-       )
+        //-     button(type="submit") Dùng Mã
         .inner-list-price
           .inner-item
             .inner-label Tạm tính:
@@ -69,13 +69,20 @@ block main
                   type="radio"
                   )
                 label(for="methodMoney") Thanh toán tiền mặt khi đi tour
+              //- .inner-item
+              //-   input#methodMomo(
+              //-     value="momo" 
+              //-     name="method" 
+              //-     type="radio"
+              //-     )
+              //-   label(for="methodMomo") Ví MoMo
               .inner-item
-                input#methodMomo(
-                  value="momo" 
+                input#methodZaloPay(
+                  value="zalopay" 
                   name="method" 
                   type="radio"
                   )
-                label(for="methodMomo") Ví MoMo
+                label(for="methodZaloPay") ZaloPay
               .inner-item
                 input#methodBank(
                   value="bank" 

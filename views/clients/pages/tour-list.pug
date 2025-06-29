@@ -80,20 +80,20 @@ block main
               |!{category.description}
           .inner-info-2
             .inner-sort
-              .inner-label Sắp xếp:
-              .inner-list
-                button
-                  | Giá tăng dần
-                  i.fa-solid.fa-square-caret-up
-                button
-                  | Giá giảm dần
-                  i.fa-solid.fa-square-caret-down
-                button.active
-                  | Khuyến Mại Hot
-                  i.fa-solid.fa-tag
-                button
-                  | Xem Nhiều
-                  i.fa-solid.fa-eye
+              //.inner-label Sắp xếp:
+              //- .inner-list
+              //-   button
+              //-     | Giá tăng dần
+              //-     i.fa-solid.fa-square-caret-up
+              //-   button
+              //-     | Giá giảm dần
+              //-     i.fa-solid.fa-square-caret-down
+              //-   button.active
+              //-     | Khuyến Mại Hot
+              //-     i.fa-solid.fa-tag
+              //-   button
+              //-     | Xem Nhiều
+              //-     i.fa-solid.fa-eye
             .inner-count-record
               | Tất cả: 
               b #{totalTour} Tour
@@ -107,13 +107,13 @@ block main
               // End Product Item
           // Pagination
           .box-pagination
-            button
+            button(leftButton)
               i.fa-solid.fa-angles-left
-            button.active 1
-            button 2
-            button 3
-            button 4
-            button
+
+            - for (let i = 1; i <= pagination.totalPage; i++)
+              button(nextpagination)(class=`${i === pagination.pageCurrent ? 'active' : ''}`)= i
+
+            button(rightButton)
               i.fa-solid.fa-angles-right
           // End Pagination
   // End Section 9

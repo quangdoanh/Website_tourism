@@ -113,7 +113,9 @@ module.exports.list = async (req, res) => {
 
     const skip = (page - 1) * limit
 
-    const totalTour = await Tour.find({})
+    const totalTour = await Tour.find({
+        deleted: false
+    })
 
     const totalPage = Math.ceil(totalTour.length / limit)
 
@@ -485,7 +487,9 @@ module.exports.trash = async (req, res) => {
 
     const skip = (page - 1) * limit
 
-    const totalTour = await Tour.find({})
+    const totalTour = await Tour.find({
+        deleted: true
+    })
 
     const totalPage = Math.ceil(totalTour.length / limit)
 

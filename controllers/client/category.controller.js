@@ -62,11 +62,35 @@ module.exports.list = async (req, res) => {
 
         const totalTour = await Tour.countDocuments(find);
 
+        // Phân trang
+        const limit = 3;
+
+        let page = 1;
+
+        if (req.query.page) {
+            const pageCurrent = parseInt(req.query.page);
+            if (pageCurrent > 0) {
+                page = pageCurrent
+            }
+        }
+
+        const skip = (page - 1) * limit
+
+        const totalPage = Math.ceil(totalTour / limit)
+
+        const pagination = {
+            skip: skip,
+            totalPage: totalPage,
+            pageCurrent: page
+        }
+        // end phân trang
         const tourListSection9 = await Tour
             .find(find)
             .sort({
                 position: "desc"
             })
+            .limit(limit)
+            .skip(skip)
 
         for (const item of tourListSection9) {
             item.departureDateFormat = moment(item.departureDate).format("DD/MM/YYYY");
@@ -75,6 +99,10 @@ module.exports.list = async (req, res) => {
 
         const cityList = await City.find({});
 
+        console.log(pagination.totalPage)
+
+
+
 
         res.render("clients/pages/tour-list", {
             pageTitle: "Danh sách tour",
@@ -82,7 +110,8 @@ module.exports.list = async (req, res) => {
             category: category,
             tourListSection9: tourListSection9,
             totalTour: totalTour,
-            cityList: cityList
+            cityList: cityList,
+            pagination: pagination
 
         });
     } else {

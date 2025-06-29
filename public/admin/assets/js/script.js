@@ -16,6 +16,24 @@ if (buttonMenuMobile) {
 }
 // End Menu Mobile
 
+
+//Sider
+const sider = document.querySelector(".sider");
+if (sider) {
+  const pathNameCurrent = window.location.pathname;
+  const splitPathNameCurrent = pathNameCurrent.split("/");
+  const menuList = sider.querySelectorAll("a");
+  menuList.forEach(item => {
+    const href = item.href;
+    const pathName = new URL(href).pathname;
+    const splitPathName = pathName.split("/");
+    if (splitPathNameCurrent[1] == splitPathName[1] && splitPathNameCurrent[2] == splitPathName[2]) {
+      item.classList.add("active");
+    }
+  })
+}
+// End Sider
+
 // Schedule Section 8
 const scheduleSection8 = document.querySelector(".section-8 .inner-schedule");
 if (scheduleSection8) {
@@ -109,48 +127,93 @@ if (listFilepondImage.length > 0) {
 // Biểu đồ doanh thu
 const revenueChart = document.querySelector("#revenue-chart");
 if (revenueChart) {
-  new Chart(revenueChart, {
-    type: 'line',
-    data: {
-      labels: ['01', '02', '03', '04', '05'],
-      datasets: [
-        {
-          label: 'Tháng 04/2025', // Nhãn của dataset
-          data: [1200000, 1800000, 3200000, 900000, 1600000], // Dữ liệu
-          borderColor: '#4379EE', // Màu viền
-          borderWidth: 1.5, // Độ dày của đường
-        },
-        {
-          label: 'Tháng 03/2025', // Nhãn của dataset
-          data: [1000000, 900000, 1200000, 1200000, 1400000], // Dữ liệu
-          borderColor: '#EF3826', // Màu viền
-          borderWidth: 1.5, // Độ dày của đường
-        }
-      ]
-    },
-    options: {
-      plugins: {
-        legend: {
-          position: 'bottom'
-        }
-      },
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Ngày'
-          }
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'Doanh thu (VND)'
-          }
-        }
-      },
-      maintainAspectRatio: false, // Không giữ tỷ lệ khung hình mặc định
+
+  let chart = null;
+  const drawChart = (date) => {
+
+
+    // Lấy tháng và năm hiện tại
+    const currentMonth = date.getMonth() + 1; // getMonth() trả về giá trị từ 0 đến 11, nên cần +1
+    const currentYear = date.getFullYear();
+
+    // Tạo một đối tượng Date mới cho tháng trước
+    // Nếu hiện tại là tháng 1 thì new Date(currentYear, 0 - 1, 1) sẽ tự động chuyển thành tháng 12 của năm trước.
+    const previousMonthDate = new Date(currentYear, date.getMonth() - 1, 1);
+
+    // Lấy tháng và năm từ đối tượng previousMonthDate
+    const previousMonth = previousMonthDate.getMonth() + 1;
+    const previousYear = previousMonthDate.getFullYear();
+
+    // Lấy ra tổng số ngày
+    const daysInMonthCurrent = new Date(currentYear, currentMonth, 0).getDate();
+    const daysInMonthPrevious = new Date(previousYear, previousMonth, 0).getDate();
+    const days = daysInMonthCurrent > daysInMonthPrevious ? daysInMonthCurrent : daysInMonthPrevious;
+    const arrayDay = [];
+    for (let i = 1; i <= days; i++) {
+      arrayDay.push(i);
     }
-  });
+
+    const dataFinal = {
+      currentMonth: currentMonth,
+      currentYear: currentYear,
+      previousMonth: previousMonth,
+      previousYear: previousYear,
+      arrayDay: arrayDay
+    };
+
+
+
+    fetch(`/${pathAdmin}/dashboard/revenue-chart`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataFinal),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.code == "error") {
+          alert(data.message);
+        }
+
+        if (data.code == "success") {
+          if (chart) {
+            chart.destroy();
+          }
+          chart = new Chart(revenueChart, {
+            type: 'line',
+            data: {
+              labels: arrayDay,
+              datasets: [
+                {
+                  label: `Tháng ${currentMonth}/${currentYear}`, // Nhãn của dataset
+                  data: data.dataMonthCurrent, // Dữ liệu
+                  borderColor: '#4379EE', // Màu viền
+                  borderWidth: 1.5, // Độ dày của đường
+                },
+                {
+                  label: `Tháng ${previousMonth}/${previousYear}`, // Nhãn của dataset
+                  data: data.dataMonthPrevious, // Dữ liệu
+                  borderColor: '#EF3826', // Màu viền
+                  borderWidth: 1.5, // Độ dày của đường
+                }
+              ]
+            }
+          });
+        }
+      })
+  }
+  // Lấy ngày hiện tại
+  const now = new Date();
+  drawChart(now);
+
+  const inputMonth = document.querySelector(".section-2 input[type='month']");
+  inputMonth.addEventListener("change", () => {
+    const value = inputMonth.value;
+    drawChart(new Date(value));
+
+  })
+
 }
 // Hết Biểu đồ doanh thu
 
@@ -888,7 +951,8 @@ if (settingAccountAdminEditForm) {
         formData.append("password", password);
       }
       formData.append("avatar", avatar);
-
+      ///account-admin/edit/:id
+      console.log("Chay vao day", formData)
       fetch(`/${pathAdmin}/setting/account-admin/edit/${id}`, {
         method: "PATCH",
         body: formData,
@@ -1181,12 +1245,9 @@ if (deleteList.length > 0) {
 
 console.log(deleteList)
 // End delete category
-
+//---------------------- FILTER --------------
 // Filter Status
 const filterStatus = document.querySelector("[filter-status]")
-
-
-
 if (filterStatus) {
   const url = new URL(window.location.href)
   filterStatus.addEventListener("change", () => {
@@ -1203,6 +1264,65 @@ if (filterStatus) {
   const valueCurrent = url.searchParams.get("status")
   if (valueCurrent)
     filterStatus.value = valueCurrent
+}
+// End
+
+// Filter Status Order
+const filterStatusOrder = document.querySelector("[filter-status-order]")
+
+if (filterStatusOrder) {
+  const url = new URL(window.location.href);
+  filterStatusOrder.addEventListener("change", () => {
+    const value = filterStatusOrder.value
+    if (value) {
+      url.searchParams.set("statusOrder", value)
+    } else {
+      url.searchParams.delete("statusOrder")
+    }
+    window.location.href = url.href
+  })
+  const valueCurrent = url.searchParams.get("statusOrder")
+  if (valueCurrent)
+    filterStatusOrder.value = valueCurrent
+}
+
+// End
+
+// Filter - PaymentMethod
+const filterPayment = document.querySelector("[filter-paymentMethod]")
+if (filterPayment) {
+  const url = new URL(window.location.href);
+  filterPayment.addEventListener("change", () => {
+    const value = filterPayment.value;
+    if (value) {
+      url.searchParams.set("namePayment", value);
+    } else {
+      url.searchParams.delete("namePayment")
+    }
+    window.location.href = url.href
+  })
+  const valueCurrent = url.searchParams.get("namePayment")
+  if (valueCurrent)
+    filterPayment.value = valueCurrent
+}
+// End
+
+// Filter Status Payment
+const filterStatusPayment = document.querySelector("[filter-status-payment]");
+if (filterStatusPayment) {
+  const url = new URL(window.location.href);
+  filterStatusPayment.addEventListener("change", () => {
+    const value = filterStatusPayment.value;
+    if (value) {
+      url.searchParams.set("statusPayment", value);
+    } else {
+      url.searchParams.delete("statusPayment")
+    }
+    window.location.href = url.href
+  })
+  const valueCurrent = url.searchParams.get("statusPayment")
+  if (valueCurrent)
+    filterStatusPayment.value = valueCurrent
 }
 // End
 
@@ -1344,7 +1464,7 @@ if (filterReset) {
 
 console.log(filterReset)
 // end
-
+//------------------- END FILTER -----------------
 
 // Check all
 const checkAll = document.querySelector("[check-all]")
@@ -1434,7 +1554,7 @@ if (search) {
     if (event.code == "Enter") {
       const value = search.value;
       if (value) {
-        url.searchParams.set("keyword", value.trim());
+        url.searchParams.set("keyword", value.trim().replace(/\s+/g, " ")); // thay mọi chuỗi khoảng trắng (\s+) liên tiếp thành 1 dấu cách " " và bỏ khoảng trắng đầu/cuối
       } else {
         url.searchParams.delete("keyword");
       }
@@ -1568,6 +1688,58 @@ if (listFilepondImageMulti.length > 0) {
 }
 // End Filepond Image Multi
 
+// User Edit
+const UserEditForm = document.querySelector("#user-edit-form");
+if (UserEditForm) {
+  const validation = new JustValidate('#user-edit-form');
 
+  validation
+    .addField('#fullName', [
+      {
+        rule: 'required',
+        errorMessage: 'Vui lòng nhập tên người dùng!'
+      },
+    ])
+    .addField('#email', [
+      {
+        rule: 'email',
+        errorMessage: 'Email không đúng định dạng!',
+      },
+    ])
+    .onSuccess((event) => {
+      const id = event.target.id.value;
+      const fullName = event.target.fullName.value;
+      const phone = event.target.phone.value;
+      const email = event.target.email.value;
+      const address = event.target.address.value;
+
+      // Tạo FormData
+      const dataFinal = {
+        fullName: fullName,
+        phone: phone,
+        email: email,
+        address: address
+      }
+
+      fetch(`/${pathAdmin}/user/edit/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataFinal)
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code === "error") {
+            alert(data.message);
+          }
+
+          if (data.code === "success") {
+            window.location.reload();
+          }
+        });
+    });
+}
+// End User Edit
 
 

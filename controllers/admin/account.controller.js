@@ -91,10 +91,18 @@ module.exports.loginPost = async (req, res) => {
     }
 
 
-    if (existAccount.status != "active") {
+    if (existAccount.status == "initial") {
         res.json({
             code: "error",
             message: "Tai khoan chua duoc kich hoat"
+        })
+        return
+    }
+
+    if (existAccount.status == "inactive") {
+        res.json({
+            code: "error",
+            message: "Tai khoan da duoc tam dung hoat dong"
         })
         return
     }
@@ -124,7 +132,7 @@ module.exports.loginPost = async (req, res) => {
 
     res.json({
         code: "success",
-        message: "Đăng ký thành công"
+        message: "Đăng nhập thành công"
     })
 
 }

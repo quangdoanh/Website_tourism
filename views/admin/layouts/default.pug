@@ -25,7 +25,9 @@ html
       div(class="alert alert-success" alert-time="3000")
         span #{messages.success}
     
-    
+    - if (messages.error)
+      div(class="alert alert-success" alert-time="3000")
+        span #{messages.success}
     //- end alert
     
     //- Header

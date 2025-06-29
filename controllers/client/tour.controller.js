@@ -73,6 +73,7 @@ module.exports.detail = async (req, res) => {
         })
 
 
+
         res.render("clients/pages/detail-tour", {
             pageTitle: "Chi tiết tour",
             breadcrumb: breadcrumb,

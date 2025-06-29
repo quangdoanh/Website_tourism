@@ -5,4 +5,6 @@ const dashboardController = require("../../controllers/admin/dashboard.controlle
 // end Controllers
 route.get('/', dashboardController.dashboard);
 
+route.post('/revenue-chart', dashboardController.revenueChartPost)
+
 module.exports = route;

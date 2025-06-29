@@ -442,8 +442,17 @@ if (orderForm) {
               localStorage.setItem("cart", JSON.stringify(cart));
 
               // Chuyển hướng sang trang đặt hành thành công
-              console.log(data.orderId)
-              window.location.href = `/order/success?orderId=${data.orderId}&phone=${phone}`
+              switch (method) {
+                case "money":
+                case "bank":
+                  // Chuyển hướng sang trang đặt hành thành công
+                  window.location.href = `/order/success?orderId=${data.orderId}&phone=${phone}`;
+                  break;
+                case "zalopay":
+                  // Chuyển hướng sang trang thanh toán bằng ZaloPay
+                  window.location.href = `/order/payment-zalopay?orderId=${data.orderId}`;
+                  break;
+              }
 
             }
           })
@@ -496,7 +505,7 @@ if (boxFilter) {
       const value = boxFilter.querySelector(`[name="${name}"]`).value;
       console.log(value)
       if (value) {
-        url.searchParams.set(name, value);
+        url.searchParams.set(name, value); // nó là thuộc tính của đối tượng URL & :id là tham số động id
       } else {
         url.searchParams.delete(name);
       }
@@ -849,6 +858,73 @@ if (pageCart) {
 }
 // End Page Cart
 
+// Next Page
+
+const buttonNextPages = document.querySelectorAll("[nextpagination]");
+
+const leftButton = document.querySelector('[leftButton]')
+const rightButton = document.querySelector("[rightButton]")
+
+console.log(leftButton)
+console.log(rightButton)
+
+console.log(buttonNextPages.length)
+
+if (buttonNextPages.length > 0) {
+  const url = new URL(window.location.href); // tạo 1 url tại địa chỉ hiện tại
+
+  let pageCurrentActive = 1;
+
+  buttonNextPages.forEach(button => {
+
+
+
+    if (button.classList.contains("active")) {
+      pageCurrentActive = parseInt(button.textContent.trim(), 10);
+    }
+
+
+
+    button.addEventListener("click", () => {
+      const pageNumber = parseInt(button.textContent.trim(), 10);
+      console.log("Chạy vào trang", pageNumber);
+
+      if (pageNumber) {
+        url.searchParams.set("page", pageNumber);
+      } else {
+        url.searchParams.delete("page");
+      }
+
+
+      window.location.href = url.href;
+    });
+    // Xử lý nút left (←)
+    if (leftButton) {
+      leftButton.addEventListener("click", () => {
+        if (pageCurrentActive > 1) {
+          url.searchParams.set("page", pageCurrentActive - 1);
+          window.location.href = url.href;
+        }
+      });
+    }
+    // Xử lý nút right (←)
+    if (rightButton) {
+      rightButton.addEventListener("click", () => {
+        if (pageCurrentActive < buttonNextPages.length) {
+          url.searchParams.set("page", pageCurrentActive + 1);
+          window.location.href = url.href;
+        }
+      });
+    }
+  });
+
+
+
+}
+
+
+
+// End Next Page
 
 
 

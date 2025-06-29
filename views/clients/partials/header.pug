@@ -2,6 +2,10 @@
 .top-header
   .container
     .inner-wrap
+      if(settingWebsiteInfo.websiteName)
+        .inner-item
+          i.fa-solid.fa-home
+          | #{settingWebsiteInfo.websiteName}
       if(settingWebsiteInfo.phone)
         .inner-item
           i.fa-solid.fa-phone
@@ -26,9 +30,10 @@ header.header
       .inner-logo
         a(href="/")
           img(
-            alt="28.TRAVEL" 
-            src="/assets/images/logo.png"
+            alt=settingWebsiteInfo.websiteName
+            src=settingWebsiteInfo.logo
             )
+
       // Menu
       nav.inner-menu
         ul
@@ -43,9 +48,9 @@ header.header
                     li
                       a(href=`/category/${itemChild.slug}`) #{itemChild.name}
           li
-            a(href="#") Tin tức
+            a(href="/") Tin tức
           li
-            a(href="#") Liên hệ
+            a(href="/") Liên hệ
         .inner-overlay
       // Cart
       .inner-cart

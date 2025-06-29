@@ -161,6 +161,7 @@ module.exports.accountAdminEdit = async (req, res) => {
     }
 }
 module.exports.accountAdminEditPatch = async (req, res) => {
+    console.log('Chạy vào đây')
     try {
         const id = req.params.id;
 
@@ -177,17 +178,6 @@ module.exports.accountAdminEditPatch = async (req, res) => {
             req.body.password = await bcrypt.hash(req.body.password, salt); // Mã hóa mật khẩu
         }
 
-        const exitsEmail = await AccountAdmin.findOne({
-            email: req.body.email
-        })
-
-        if (exitsEmail) {
-            req.flash('error', 'Email này đã được dùng!');
-            res.json({
-                code: "success"
-            });
-            return
-        }
 
         await AccountAdmin.updateOne({
             _id: id,
@@ -200,6 +190,7 @@ module.exports.accountAdminEditPatch = async (req, res) => {
             code: "success"
         });
     } catch (error) {
+        console.log(error)
         res.redirect(`/${pathAdmin}/setting/account-admin/list`);
     }
 }

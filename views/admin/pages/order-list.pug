@@ -11,28 +11,28 @@ block main
       .inner-item.inner-label
         <i class="fa-solid fa-filter"></i> Bộ lọc
       .inner-item
-        select
+        select(filter-status-order)
           option(value="") Trạng thái
-          option(value="") Khởi tạo
-          option(value="") Hoàn thành
-          option(value="") Hủy
+          option(value="initial") Khởi tạo
+          option(value="done") Hoàn thành
+          option(value="cancel") Hủy
       .inner-item.inner-date
-        input(type="date")
+        input(type="date" filter-start-date)
         span -
-        input(type="date")
+        input(type="date" filter-end-date)
       .inner-item
-        select
+        select(filter-paymentMethod)
           option(value="") Phương thức thanh toán
-          option(value="") Ví Momo
-          option(value="") VNPay
-          option(value="") ZaloPay
+          option(value="money") Tiền mặt
+          option(value="bank") Chuyển khoản ngân hàng
+          option(value="zalopay") ZaloPay
       .inner-item
-        select
+        select(filter-status-payment)
           option(value="") Trạng thái thanh toán
-          option(value="") Đã thanh toán
-          option(value="") Chưa thanh toán
+          option(value="paid") Đã thanh toán
+          option(value="unpaid") Chưa thanh toán
       .inner-item.inner-reset
-        <i class="fa-solid fa-rotate-left"></i> Xóa bộ lọc
+        <i class="fa-solid fa-rotate-left" filter-reset></i> Xóa bộ lọc
   //- End Section 4
 
   //- Section 5
@@ -40,7 +40,10 @@ block main
     .inner-wrap
       .inner-search
         <i class="fa-solid fa-magnifying-glass"></i>
-        input(type="text" placeholder="Tìm kiếm")
+        input(type="text" placeholder="Tìm kiếm" search)
+      .inner-button-trash
+          if (permissions.includes("order-trash"))
+            a(href=`/${adminPathName}/order/trash`) + Thùng rác
   //- End Section 5
 
   //- Section 6
@@ -72,9 +75,9 @@ block main
                   img(src=item.avatar, alt=item.name)
                 .inner-content
                   .inner-name #{item.name}
-                    .inner-quantity Người lớn: #{item.quantityAdult} x #{item.priceNewAdult.toLocaleString("vi-VN")}đ
-                    .inner-quantity Trẻ em: #{item.quantityChildren} x #{item.priceNewChildren.toLocaleString("vi-VN")}đ
-                    .inner-quantity Em bé: #{item.quantityBaby} x #{item.priceNewBaby.toLocaleString("vi-VN")}đ
+                  .inner-quantity Người lớn: #{item.quantityAdult} x #{item.priceNewAdult.toLocaleString("vi-VN")}đ
+                  .inner-quantity Trẻ em: #{item.quantityChildren} x #{item.priceNewChildren.toLocaleString("vi-VN")}đ
+                  .inner-quantity Em bé: #{item.quantityBaby} x #{item.priceNewBaby.toLocaleString("vi-VN")}đ
             td
               div Tạm tính: #{orderDetail.subTotal.toLocaleString("vi-VN")}đ
               div Giảm: #{orderDetail.discount.toLocaleString("vi-VN")}đ
@@ -98,14 +101,17 @@ block main
                   href=`/${pathAdmin}/order/edit/${orderDetail.id}`
                   class="inner-edit"
                   ) <i class="fa-regular fa-pen-to-square"></i>
-                button(class="inner-delete") <i class="fa-regular fa-trash-can"></i>
+                button(
+                    class="inner-delete"
+                    button-delete
+                    data-api=`/${pathAdmin}/order/delete/${orderDetail.id}`
+                  ) <i class="fa-regular fa-trash-can"></i>
   //- End Section 6
 
   //- Section 7
   .section-7
-    span(class="inner-label") Hiển thị 1 - 9 của 78
-    select(class="inner-pagination")
-      option Trang 1
-      option Trang 2
-      option Trang 3
+    span(class="inner-label") Hiển thị #{pagination.skip + 1} - #{orderList.length + pagination.skip} của #{pagination.totalOrder.length}
+      select(class="inner-pagination" pagination)
+        - for(let i = 1 ; i <= pagination.totalPage ; i++)
+              option(value=i) Trang #{i}
   //- End Section 7

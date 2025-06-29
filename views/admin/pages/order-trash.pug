@@ -1,0 +1,83 @@
+extends ../layouts/default.pug
+
+block main
+  if (permissions.includes("order-trash"))
+    h1.box-title Thùng rác order
+
+    //- Section 5
+    .section-5
+      .inner-wrap
+        .inner-search
+          <i class="fa-solid fa-magnifying-glass"  > </i>
+          input(type="text" placeholder="Tìm kiếm" search)
+    //- End Section 5
+    //- Section 6
+    .section-6
+      .table-2
+        table
+          thead
+            tr
+              th Mã
+              th Thông tin khách
+              th Danh sách tour
+              th Thanh toán
+              th Trạng thái
+              th(class="inner-center") Ngày đặt
+              th Hành động
+          tbody
+           each orderDetail in orderList
+            tr
+              td
+                .inner-code #{orderDetail.orderCode}
+              td
+                div Họ tên: #{orderDetail.fullName}
+                div SĐT: #{orderDetail.phone}
+                div Ghi chú: #{orderDetail.note}
+              td
+               each item in orderDetail.items
+                .inner-item
+                  .inner-image
+                    img(src=item.avatar, alt=item.name)
+                  .inner-content
+                    .inner-name #{item.name}
+                    .inner-quantity Người lớn: #{item.quantityAdult} x #{item.priceNewAdult.toLocaleString("vi-VN")}đ
+                    .inner-quantity Trẻ em: #{item.quantityChildren} x #{item.priceNewChildren.toLocaleString("vi-VN")}đ
+                    .inner-quantity Em bé: #{item.quantityBaby} x #{item.priceNewBaby.toLocaleString("vi-VN")}đ
+              td
+                div Tạm tính: #{orderDetail.subTotal.toLocaleString("vi-VN")}đ
+                div Giảm: #{orderDetail.discount.toLocaleString("vi-VN")}đ
+                //- div Mã giảm: TOURMUAHE2024
+                div Thanh toán: #{orderDetail.total.toLocaleString("vi-VN")}đ
+                div PTTT: #{orderDetail.paymentMethodName}
+                div TTTT: #{orderDetail.paymentStatusName}
+              td
+                if (orderDetail.status == "initial")
+                  .badge.badge-orange #{orderDetail.statusName}
+                else if (orderDetail.status == "done")
+                  .badge.badge-green #{orderDetail.statusName}
+                else if (orderDetail.status == "cancel")
+                  .badge.badge-red #{orderDetail.statusName}
+              td(class="inner-center")
+                div #{orderDetail.createdAtTime}
+                div #{orderDetail.createdAtDate}
+              td
+                .inner-buttons
+                  button(
+                      class="inner-undo"
+                      button-delete
+                      data-api=`/${pathAdmin}/order/undo/${orderDetail.id}`
+                    ) <i class="fa-solid fa-rotate-left"></i>
+                    button(
+                      class="inner-delete"
+                      button-delete
+                      data-api=`/${pathAdmin}/order/delete-destroy/${orderDetail.id}`
+                    ) <i class="fa-regular fa-trash-can"></i>
+    //- End Section 6
+
+    //- Section 7
+    .section-7
+      span(class="inner-label") Hiển thị #{pagination.skip + 1} - #{orderList.length + pagination.skip} của #{pagination.totalOrder.length}
+        select(class="inner-pagination" pagination)
+          - for(let i = 1 ; i <= pagination.totalPage ; i++)
+                option(value=i) Trang #{i}
+    //- End Section 7

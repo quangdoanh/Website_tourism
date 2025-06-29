@@ -20,20 +20,37 @@ module.exports.home = async (req, res) => {
 
     // Section 4
     const categoryIdSection4 = "683efbc6f07620bea1842510"; // id danh mục Tour Trong Nước
-    const listCategoryId = await categoryHelper.getAllSubcategoryIds(categoryIdSection4);
+    const categoryIdSection9 = "68513b8d6ac55c5ebf02a564"; // id danh mục Tour  Nước Ngoài
+
+    const listCategoryId4 = await categoryHelper.getAllSubcategoryIds(categoryIdSection4);
+    const listCategoryId9 = await categoryHelper.getAllSubcategoryIds(categoryIdSection9);
 
     const tourListSection4 = await Tour
         .find({
-            category: { $in: listCategoryId },
+            category: { $in: listCategoryId4 },
             deleted: false,
             status: "active"
         })
         .sort({
             position: "desc"
         })
-        .limit(8)
+    const tourListSection9 = await Tour
+        .find({
+            category: { $in: listCategoryId9 },
+            deleted: false,
+            status: "active"
+        })
+        .sort({
+            position: "desc"
+        })
 
     for (const item of tourListSection2) {
+        item.departureDateFormat = moment(item.departureDate).format("DD/MM/YYYY");
+    }
+    for (const item of tourListSection4) {
+        item.departureDateFormat = moment(item.departureDate).format("DD/MM/YYYY");
+    }
+    for (const item of tourListSection9) {
         item.departureDateFormat = moment(item.departureDate).format("DD/MM/YYYY");
     }
 
@@ -44,6 +61,7 @@ module.exports.home = async (req, res) => {
     res.render('clients/pages/home.pug', {
         pageTitle: "Trang chủ",
         tourListSection2: tourListSection2,
-        tourListSection4: tourListSection4
+        tourListSection4: tourListSection4,
+        tourListSection9: tourListSection9
     })
 }

@@ -13,10 +13,10 @@ block main
         input(type="text" id="fullName" name="fullName" value=accountAdminDetail.fullName)
       .inner-group
         label(class="inner-label" for="email") Email
-        input(type="email" id="email" name="email" value=accountAdminDetail.email)
+        input(type="email" id="email" name="email" readonly value=accountAdminDetail.email )
       .inner-group
         label(class="inner-label" for="phone") Số điện thoại
-        input(type="text" id="phone" name="phone" value=accountAdminDetail.phone)
+        input(type="text" id="phone" name="phone" value=accountAdminDetail.phone || "")
       .inner-group
         label(class="inner-label" for="role") Nhóm quyền
         select(id="role" name="role")

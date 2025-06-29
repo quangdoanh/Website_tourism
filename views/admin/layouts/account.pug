@@ -5,6 +5,11 @@ html
     block title
     link(rel="stylesheet", href="/admin/assets/css/style.css")
     title #{pageTitle}
+    link(
+      href=settingWebsiteInfo.favicon 
+      rel="icon" 
+      type="image/x-icon"
+    )
     script. 
       const pathAdmin = "#{adminPathName}";
   body
