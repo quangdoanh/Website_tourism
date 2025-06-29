@@ -1485,9 +1485,6 @@ if (changeMulti) {
   const select = changeMulti.querySelector("select")
   const button = changeMulti.querySelector("button")
 
-
-
-
   button.addEventListener("click", () => {
 
 
@@ -1742,4 +1739,27 @@ if (UserEditForm) {
 }
 // End User Edit
 
+// Filter Role
+const filterRole = document.querySelector("[filter-role]");
+if(filterRole) {
+  const url = new URL(window.location.href);
 
+  // Lắng nghe thay đổi lựa chọn
+  filterRole.addEventListener("change", () => {
+    const value = filterRole.value;
+    if(value) {
+      url.searchParams.set("role", value);
+    } else {
+      url.searchParams.delete("role");
+    }
+
+    window.location.href = url.href;
+  })
+
+  // Hiển thị lựa chọn mặc định
+  const valueCurrent = url.searchParams.get("role");
+  if(valueCurrent) {
+    filterRole.value = valueCurrent;
+  }
+}
+// End Filter Role
