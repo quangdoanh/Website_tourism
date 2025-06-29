@@ -33,12 +33,14 @@ route.post(
     settingController.accountAdminCreatePost
 )
 
+
 route.get('/account-admin/edit/:id', settingController.accountAdminEdit)
 route.patch(
     '/account-admin/edit/:id',
     upload.single("avatar"),
     settingController.accountAdminEditPatch
 )
+// Việt
 route.patch('/account-admin/delete/:id', settingController.accountAdminDelete);
 route.patch('/account-admin/change-multi', settingController.changeMultiAccountAdminPatch);
 route.get('/account-admin/trash', settingController.accountAdminTrash)
