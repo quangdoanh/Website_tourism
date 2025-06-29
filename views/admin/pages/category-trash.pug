@@ -1,0 +1,83 @@
+extends ../layouts/default.pug
+
+block main
+  if(permissions.includes("category-trash"))  
+    h1.box-title Thùng rác danh mục
+
+    //- Section 5
+    .section-5
+      .inner-wrap
+        .inner-change-status(
+          change-multi
+          )
+          .inner-item
+            select
+              option(value="") -- Hành động --
+              option(value="undo") Khôi phục
+              option(value="permanently-delete") Xóa vĩnh viễn
+          .inner-item
+            button(data-api=`/${pathAdmin}/category/trash/change-multi`) Áp dụng
+        .inner-search
+          <i class="fa-solid fa-magnifying-glass"></i>
+          input(type="text" placeholder="Tìm kiếm" search)
+    //- End Section 5
+
+    //- Section 6
+    .section-6
+      .table-2
+        table
+          thead
+            tr
+              th(class="inner-center")
+                input(type="checkbox" class="inner-check" check-all)
+              th Tên danh mục
+              th Ảnh đại diện
+              th(class="inner-center") Vị trí
+              th(class="inner-center") Trạng thái
+              th Tạo bởi
+              th Cập nhật bởi
+              th Hành động
+          tbody
+            each item in categoryList
+              tr
+                td(class="inner-center")
+                  input(type="checkbox" class="inner-check"  check-item=item.id)
+                td #{item.name}
+                td
+                  img(src=item.avatar class="inner-avatar")
+                td(class="inner-center") #{item.position}
+                td(class="inner-center")
+                  if (item.status == "active")
+                    .badge.badge-green Hoạt động
+                  else if(item.status == "inactive")
+                    .badge.badge-red Tạm dừng
+                td
+                  div #{item.createdByFullname}
+                  div.inner-time #{item.createdAtFormat}
+                td
+                  div #{item.updatedByFullname}
+                  div.inner-time #{item.updatedAtFormat}
+                td
+                  .inner-buttons
+                    button(
+                      class="inner-undo" 
+                      title="Khôi phục"
+                      button-delete
+                      data-api=`/${pathAdmin}/category/undo/${item.id}`
+                    ) <i class="fa-solid fa-rotate-left"></i>
+                    button(
+                      class="inner-delete" 
+                      title="xóa vĩnh viễn"
+                      button-delete
+                      data-api=`/${pathAdmin}/category/permanently-delete/${item.id}`
+                    ) <i class="fa-regular fa-trash-can"></i>
+    //- End Section 6
+
+    //- Section 7
+    .section-7
+      span(class="inner-label") Hiển thị #{pagination.skip + 1} - #{categoryList.length + pagination.skip} của #{pagination.totalCategory.length}
+      select(class="inner-pagination" pagination)
+        - for(let i = 1 ; i <= pagination.totalPage ; i++)
+              option(value=i) Trang #{i}
+          
+    //- End Section 7
