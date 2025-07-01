@@ -77,14 +77,17 @@ module.exports.list = async (req, res) => {
 };
 
 module.exports.deletePatch = async (req, res) => {
+  console.log("Chạy vào đây")
   if (!req.permissions.includes("contact-delete")) {
     res.json({
       code: "error",
       message: "Không có quyền sử dụng tính năng này!",
     });
+    console.log('Chạy vào if')
     return;
   }
   try {
+    console.log("Chạy vào try")
     const id = req.params.id;
     // deleted Model
 
