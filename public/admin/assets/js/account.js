@@ -45,9 +45,6 @@ if (loginForm) {
       const email = event.target.email.value;
       const password = event.target.password.value;
       const rememberPassword = event.target.rememberPassword.checked;
-
-
-
       const dataFinal = {
         email: email,
         password: password,
@@ -69,8 +66,8 @@ if (loginForm) {
           }
 
           if (data.code == "success") {
+            alert(data.message)
             window.location.href = `/${pathAdmin}/dashboard`;
-            console.log("Thành công")
           }
         })
 

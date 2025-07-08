@@ -99,7 +99,7 @@ module.exports.list = async (req, res) => {
         _id: item.createdBy,
       })
       // console.log("namecategory", inforAccountCreated)
-      item.nameCeatedBy = inforAccountCreated.name;
+      item.nameCeatedBy = inforAccountCreated.fullName;
 
     }
 
@@ -108,7 +108,7 @@ module.exports.list = async (req, res) => {
       const inforAccountUpdate = await accountAdmin.findOne({
         _id: item.createdBy,
       })
-      item.namedUpdatedBy = inforAccountUpdate.name;
+      item.namedUpdatedBy = inforAccountUpdate.fullName;
     }
 
     item.createdAtFormat = moment(item.createdAt).format("HH:mm - DD/MM/YYYY");

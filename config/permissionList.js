@@ -79,7 +79,18 @@ module.exports.permissionList = [
         label: "Thùng rác người dùng",
         value: "user-trash"
     },
-
+    {
+        label: "Xem thông tin liên hệ",
+        value: "contact-view"
+    },
+    {
+        label: "Xóa thông tin liên hệ",
+        value: "contact-delete"
+    },
+    {
+        label: "Thùng rác thông tin liên hệ",
+        value: "contact-trash"
+    },
     {
         label: "Cài đặt chung ",
         value: "setting-view"

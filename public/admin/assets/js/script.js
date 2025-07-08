@@ -1232,7 +1232,7 @@ if (deleteList.length > 0) {
         .then(res => res.json())
         .then(data => {
           if (data.code == "error") {
-            console.log(data.message)
+            alert(data.message)
           }
           if (data.code == "success") {
             window.location.reload()
@@ -1741,13 +1741,13 @@ if (UserEditForm) {
 
 // Filter Role
 const filterRole = document.querySelector("[filter-role]");
-if(filterRole) {
+if (filterRole) {
   const url = new URL(window.location.href);
 
   // Lắng nghe thay đổi lựa chọn
   filterRole.addEventListener("change", () => {
     const value = filterRole.value;
-    if(value) {
+    if (value) {
       url.searchParams.set("role", value);
     } else {
       url.searchParams.delete("role");
@@ -1758,7 +1758,7 @@ if(filterRole) {
 
   // Hiển thị lựa chọn mặc định
   const valueCurrent = url.searchParams.get("role");
-  if(valueCurrent) {
+  if (valueCurrent) {
     filterRole.value = valueCurrent;
   }
 }
