@@ -243,6 +243,13 @@ module.exports.changeMultiPatch = async (req, res) => {
 
     switch (option) {
       case "delete":
+        if (!req.permissions.includes("contact-trash")) {
+          res.json({
+            code: "error",
+            message: "Không có quyền sử dụng tính năng này!",
+          });
+          return;
+        }
         await Contact.updateMany(
           {
             _id: { $in: ids },
