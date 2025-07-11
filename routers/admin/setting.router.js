@@ -45,7 +45,7 @@ route.patch('/account-admin/delete/:id', settingController.accountAdminDelete);
 route.patch('/account-admin/change-multi', settingController.changeMultiAccountAdminPatch);
 route.get('/account-admin/trash', settingController.accountAdminTrash)
 route.patch('/account-admin/undo/:id', settingController.undoAccountAdminPatch)
-route.patch('/account-admin/delete-destroy/:id', settingController.deleteDestroyPatch)
+route.delete('/account-admin/delete-destroy/:id', settingController.deleteDestroyPatch)
 route.patch('/account-admin/trash/change-multi', settingController.trashAccountAdminChangeMultiPatch)
 
 
