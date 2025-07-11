@@ -157,8 +157,19 @@ module.exports.list = async (req, res) => {
   }
 
   // Body
-  const accountList = await accountAdmin.find({}).select("id name");
+  // const accountList = await accountAdmin.find({}).select("id fullName");
+  
+  const accountExist = await Tour.find({}).select("createdBy");
+  let arrray = [];
+  for (const item of accountExist) {
+    arrray.push(item.createdBy);
+  }
 
+  const accountList = await accountAdmin.find({
+    _id: { $in: arrray }
+  }).select("id fullName");
+
+  // console.log(" ds : "+accountList);
   res.render('admin/pages/tour-list', {
     pageTitle: "Danh sách tour",
     tourList: tourList,

@@ -9,7 +9,7 @@ route.get('/trash', contactController.trash);
 
 route.patch('/undo/:id', contactController.undoPatch);
 
-route.patch('/delete-destroy/:id', contactController.deleteDestroyDelete);
+route.delete('/delete-destroy/:id', contactController.deleteDestroyDelete);
 
 route.patch('/change-multi', contactController.changeMultiPatch)
 
