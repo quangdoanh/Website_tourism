@@ -130,10 +130,14 @@ module.exports.loginPost = async (req, res) => {
     console.log("Body:", req.body);
     console.log("Token:", token);
 
+    req.flash("success", "Đăng nhập thành công")
+
     res.json({
         code: "success",
         message: "Đăng nhập thành công"
     })
+
+
 
 }
 // --------------lOGOUT ----------------------

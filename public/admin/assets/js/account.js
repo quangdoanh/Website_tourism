@@ -66,7 +66,6 @@ if (loginForm) {
           }
 
           if (data.code == "success") {
-            alert(data.message)
             window.location.href = `/${pathAdmin}/dashboard`;
           }
         })
@@ -170,7 +169,7 @@ if (registerForm) {
             alert(data.message)
           }
           if (data.code == "success") {
-            console.log("Chạy vao day")
+            console.log("đăn ký thành công")
             window.location.href = `/${pathAdmin}/account/register-initial`;
           }
         })
