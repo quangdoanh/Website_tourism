@@ -1216,7 +1216,7 @@ if (alertTime) {
 }
 // End Alert
 
-// Delete  
+// Delete soft  
 const deleteList = document.querySelectorAll("[button-delete]")
 
 if (deleteList.length > 0) {
@@ -1244,7 +1244,38 @@ if (deleteList.length > 0) {
 
 
 console.log(deleteList)
-// End delete category
+// End delete soft
+
+// Delete soft  
+const deleteDestroyList = document.querySelectorAll("[button-delete-destroy]")
+
+if (deleteDestroyList.length > 0) {
+  deleteDestroyList.forEach((button) => {
+    button.addEventListener("click", () => {
+      const api = button.getAttribute("data-api")
+
+      console.log(api)
+
+      fetch(api, {
+        method: "DELETE"
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            alert(data.message)
+          }
+          if (data.code == "success") {
+            window.location.reload()
+          }
+        })
+    })
+  })
+}
+
+
+console.log(deleteDestroyList)
+// End delete soft
+
 //---------------------- FILTER --------------
 // Filter Status
 const filterStatus = document.querySelector("[filter-status]")

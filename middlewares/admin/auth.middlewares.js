@@ -24,7 +24,7 @@ module.exports.verifyToken = async (req, res, next) => {
         })
 
 
-
+        // Không có tài khoản cho về trang login
         if (!existAccount) {
             res.clearCookie("token");
             res.redirect(`/${pathAdmin}/account/login`);
@@ -37,6 +37,7 @@ module.exports.verifyToken = async (req, res, next) => {
             deleted: false
         })
 
+        // ---- Tài khoản có những quyền đã xóa sẽ bị out
         if (roleInfor) {
             existAccount.roleName = roleInfor.name
             req.permissions = roleInfor.permissions;
@@ -50,9 +51,7 @@ module.exports.verifyToken = async (req, res, next) => {
         // gửi tên account về fe (bug)
         res.locals.account = existAccount
 
-        //console.log("filebug:", res.locals.account)
-
-
+        console.log("filebug:", res.locals.account)
 
         next();
     } catch (error) {

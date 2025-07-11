@@ -14,7 +14,7 @@ block main
             select
               option(value="") -- Hành động --
               option(value="undo") Khôi phục
-              option(value="permanently-delete") Xóa vĩnh viễn
+              option(value="destroy-delete") Xóa vĩnh viễn
           .inner-item
             button(data-api=`/${pathAdmin}/category/trash/change-multi`) Áp dụng
         .inner-search
@@ -68,8 +68,8 @@ block main
                     button(
                       class="inner-delete" 
                       title="xóa vĩnh viễn"
-                      button-delete
-                      data-api=`/${pathAdmin}/category/permanently-delete/${item.id}`
+                      button-delete-destroy
+                      data-api=`/${pathAdmin}/category/destroy-delete/${item.id}`
                     ) <i class="fa-regular fa-trash-can"></i>
     //- End Section 6
 
