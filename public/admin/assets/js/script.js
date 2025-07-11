@@ -1216,7 +1216,7 @@ if (alertTime) {
 }
 // End Alert
 
-// Delete  
+// Delete soft  
 const deleteList = document.querySelectorAll("[button-delete]")
 
 if (deleteList.length > 0) {
@@ -1232,7 +1232,7 @@ if (deleteList.length > 0) {
         .then(res => res.json())
         .then(data => {
           if (data.code == "error") {
-            console.log(data.message)
+            alert(data.message)
           }
           if (data.code == "success") {
             window.location.reload()
@@ -1244,7 +1244,38 @@ if (deleteList.length > 0) {
 
 
 console.log(deleteList)
-// End delete category
+// End delete soft
+
+// Delete soft  
+const deleteDestroyList = document.querySelectorAll("[button-delete-destroy]")
+
+if (deleteDestroyList.length > 0) {
+  deleteDestroyList.forEach((button) => {
+    button.addEventListener("click", () => {
+      const api = button.getAttribute("data-api")
+
+      console.log(api)
+
+      fetch(api, {
+        method: "DELETE"
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code == "error") {
+            alert(data.message)
+          }
+          if (data.code == "success") {
+            window.location.reload()
+          }
+        })
+    })
+  })
+}
+
+
+console.log(deleteDestroyList)
+// End delete soft
+
 //---------------------- FILTER --------------
 // Filter Status
 const filterStatus = document.querySelector("[filter-status]")
@@ -1741,13 +1772,13 @@ if (UserEditForm) {
 
 // Filter Role
 const filterRole = document.querySelector("[filter-role]");
-if(filterRole) {
+if (filterRole) {
   const url = new URL(window.location.href);
 
   // Lắng nghe thay đổi lựa chọn
   filterRole.addEventListener("change", () => {
     const value = filterRole.value;
-    if(value) {
+    if (value) {
       url.searchParams.set("role", value);
     } else {
       url.searchParams.delete("role");
@@ -1758,7 +1789,7 @@ if(filterRole) {
 
   // Hiển thị lựa chọn mặc định
   const valueCurrent = url.searchParams.get("role");
-  if(valueCurrent) {
+  if (valueCurrent) {
     filterRole.value = valueCurrent;
   }
 }

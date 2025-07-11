@@ -45,9 +45,6 @@ if (loginForm) {
       const email = event.target.email.value;
       const password = event.target.password.value;
       const rememberPassword = event.target.rememberPassword.checked;
-
-
-
       const dataFinal = {
         email: email,
         password: password,
@@ -70,7 +67,6 @@ if (loginForm) {
 
           if (data.code == "success") {
             window.location.href = `/${pathAdmin}/dashboard`;
-            console.log("Thành công")
           }
         })
 
@@ -173,7 +169,7 @@ if (registerForm) {
             alert(data.message)
           }
           if (data.code == "success") {
-            console.log("Chạy vao day")
+            console.log("đăn ký thành công")
             window.location.href = `/${pathAdmin}/account/register-initial`;
           }
         })

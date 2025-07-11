@@ -59,7 +59,7 @@ route.get('/role/edit/:id', settingController.roleEdit)
 route.patch('/role/edit/:id', settingController.roleEditPatch)
 route.patch('/role/undo/:id', settingController.undoPatch)
 
-route.patch('/role/delete-destroy/:id', settingController.deleteDestroyDelete)
+route.delete('/role/delete-destroy/:id', settingController.deleteDestroyDelete)
 route.patch('/role/delete/:id', settingController.roleDeletePatch)
 
 route.get('/role/trash', settingController.roleTrash)
