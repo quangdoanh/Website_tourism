@@ -14,6 +14,6 @@ route.patch('/delete/:id', orderController.deletePatch)
 // Thùng rác
 route.get('/trash', orderController.trash);
 route.patch('/undo/:id', orderController.undoPatch)
-route.patch('/delete-destroy/:id', orderController.deleteDestroyDelete)
+route.delete('/delete-destroy/:id', orderController.deleteDestroyDelete)
 
 module.exports = route;

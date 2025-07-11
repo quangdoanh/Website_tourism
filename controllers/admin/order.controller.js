@@ -54,6 +54,7 @@ module.exports.list = async (req, res) => {
 
         console.log("name", keywordRegex)
         find.$or = [
+            { orderCode: keywordRegex },
             { fullName: keywordRegex },
             { phone: keywordRegex },
             { "items.name": keywordRegex }
@@ -87,6 +88,8 @@ module.exports.list = async (req, res) => {
         totalPage: totalPage
     }
 
+    console.log("find: ", find)
+
     const orderList = await Order
         .find(find)
         .sort({
@@ -100,6 +103,7 @@ module.exports.list = async (req, res) => {
         orderDetail.paymentStatusName = variableConfig.paymentStatus.find(item => item.value == orderDetail.paymentStatus).label;
         orderDetail.statusName = variableConfig.orderStatus.find(item => item.value == orderDetail.status).label;
 
+        // Chuyển về time hiện tại từ mongoose
         orderDetail.createdAtTime = moment(orderDetail.createdAt).format("HH:mm");
         orderDetail.createdAtDate = moment(orderDetail.createdAt).format("DD/MM/YYYY");
 
