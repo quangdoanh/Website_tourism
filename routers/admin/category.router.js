@@ -38,7 +38,7 @@ route.get('/trash', categoryController.trash)
 
 route.patch('/undo/:id', categoryController.undoPatch)
 
-route.patch('/permanently-delete/:id', categoryController.permanentlyDeletePatch)
+route.delete('/destroy-delete/:id', categoryController.destroyDelete)
 
 route.patch('/trash/change-multi', categoryController.trashChangeMultiPatch)
 

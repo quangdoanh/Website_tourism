@@ -443,7 +443,7 @@ module.exports.undoPatch = async (req, res) => {
   }
 }
 
-module.exports.permanentlyDeletePatch = async (req, res) => {
+module.exports.destroyDelete = async (req, res) => {
   if (!req.permissions.includes("category-trash")) {
     req.flash("error", "Bạn không có quyền xóa vĩnh viễn danh mục!");
     res.json({
@@ -494,7 +494,7 @@ module.exports.trashChangeMultiPatch = async (req, res) => {
         });
         req.flash("success", "Khôi phục thành công!");
         break;
-      case "permanently-delete":
+      case "destroy-delete":
         if (!req.permissions.includes("category-trash")) {
           req.flash("error", "Bạn không có quyền xóa vĩnh viễn danh mục!");
           res.json({
