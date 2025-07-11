@@ -10,7 +10,7 @@ route.patch('/delete/:id', userController.deletePatch);
 route.patch('/change-multi', userController.changeMultiPatch);
 route.get('/trash', userController.trash);
 route.patch('/undo/:id', userController.undoPatch)
-route.patch('/delete-destroy/:id', userController.deleteDestroyPatch)
+route.delete('/delete-destroy/:id', userController.deleteDestroyPatch)
 route.patch('/trash/change-multi', userController.trashChangeMultiPatch)
 
 module.exports = route;
