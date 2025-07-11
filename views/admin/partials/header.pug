@@ -6,7 +6,7 @@ header.header
   .inner-wrap
     .inner-account
       .inner-avatar
-        img(src=account.avatar || "", alt=account.fullName )
+        img(src=(account.avatar || ""), alt="")
       .inner-text
         .inner-name #{account.fullName}
         .inner-role #{account.roleName}
