@@ -116,7 +116,7 @@ module.exports.list = async (req, res) => {
   }
 
   // Body
-  const accountList = await accountAdmin.find({}).select("id name");
+  const accountList = await accountAdmin.find({}).select("id fullName");
 
 
   res.render('admin/pages/category-list', {
@@ -522,3 +522,13 @@ module.exports.trashChangeMultiPatch = async (req, res) => {
     })
   }
 }
+
+// const accountExist = await Category.find({}).select("createdBy");
+//   let arrray = [];
+//   for (const item of accountExist) {
+//     arrray.push(item.createdBy);
+//   }
+
+//   const accountList = await accountAdmin.find({
+//     _id: { $in: arrray }
+//   }).select("id fullName");

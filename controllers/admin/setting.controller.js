@@ -10,7 +10,7 @@ slugify.extend({ 'đ': 'd', 'Đ': 'D' }); // tránh d thành ds
 // Mã hóa mật khẩu
 const bcrypt = require("bcryptjs");
 const { create } = require('../../models/tour.model');
-const moment = require('moment'); 
+const moment = require('moment');
 
 
 
@@ -66,7 +66,7 @@ module.exports.websiteInfoPatch = async (req, res) => {
 // Account
 module.exports.accountAdminlist = async (req, res) => {
     const find = {
-      deleted: false
+        deleted: false
     }
     //Nhóm quyền
     const listRole = await Role.find({
@@ -77,7 +77,7 @@ module.exports.accountAdminlist = async (req, res) => {
         find.status = req.query.status;
     }
     //Lọc theo quyền
-    if(req.query.role){
+    if (req.query.role) {
         find.role = req.query.role
     }
 
@@ -97,15 +97,15 @@ module.exports.accountAdminlist = async (req, res) => {
 
     //Tìm kiếm
     if (req.query.keyword) {
-      const keyword = req.query.keyword;
-      const keywordRegex = new RegExp(keyword, "i"); // i = không phân biệt hoa thường
+        const keyword = req.query.keyword;
+        const keywordRegex = new RegExp(keyword, "i"); // i = không phân biệt hoa thường
 
-      console.log("name", keywordRegex)
-      find.$or = [
-          { fullName: keywordRegex },
-          { phone: keywordRegex },
-          { "items.name": keywordRegex }
-      ];
+        console.log("name", keywordRegex)
+        find.$or = [
+            { fullName: keywordRegex },
+            { phone: keywordRegex },
+            { "items.name": keywordRegex }
+        ];
     }
 
     // Phân trang
@@ -114,7 +114,7 @@ module.exports.accountAdminlist = async (req, res) => {
     if (req.query.page) {
         const currentPage = parseInt(req.query.page);
         if (currentPage > 0) {
-        page = currentPage;
+            page = currentPage;
         }
     }
 
@@ -135,13 +135,13 @@ module.exports.accountAdminlist = async (req, res) => {
         totalPage: totalPage,
     };
     const accountAdminList = await AccountAdmin
-      .find(find)
-      .sort({
-          createdAt: "desc"
-      })
-      .limit(limitItems)
-      .skip(skip)
-    
+        .find(find)
+        .sort({
+            createdAt: "desc"
+        })
+        .limit(limitItems)
+        .skip(skip)
+
     for (const item of accountAdminList) {
         if (item.role) {
             const roleInf = await Role.findOne({
@@ -159,7 +159,7 @@ module.exports.accountAdminlist = async (req, res) => {
         pageTitle: "Tài khoản quản trị",
         accountAdminList: accountAdminList,
         listRole: listRole,
-        pagination:pagination
+        pagination: pagination
     })
 }
 //--Create
@@ -268,238 +268,238 @@ module.exports.accountAdminEditPatch = async (req, res) => {
 }
 //Xóa
 module.exports.accountAdminDelete = async (req, res) => {
-  try {
-    const id = req.params.id;
+    try {
+        const id = req.params.id;
 
-    await AccountAdmin.updateOne({
-      _id: id
-    }, {
-      deleted: true,
-      deletedBy:req.account.id,
-      deletedAt:Date.now()
-    });
+        await AccountAdmin.updateOne({
+            _id: id
+        }, {
+            deleted: true,
+            deletedBy: req.account.id,
+            deletedAt: Date.now()
+        });
 
-    req.flash('success', 'Xóa tài khoản quản trị thành công!');
+        req.flash('success', 'Xóa tài khoản quản trị thành công!');
 
-    res.json({
-      code: "success"
-    });
-  } catch (error) {
-    res.redirect(`/${pathAdmin}/setting/account-admin/list`);
-  }
+        res.json({
+            code: "success"
+        });
+    } catch (error) {
+        res.redirect(`/${pathAdmin}/setting/account-admin/list`);
+    }
 }
 //Khôi phục tài khoản
 module.exports.undoAccountAdminPatch = async (req, res) => {
-  try {
-    const id = req.params.id;
-    
-    await AccountAdmin.updateOne({
-      _id: id
-    }, {
-      deleted: false
-    })
+    try {
+        const id = req.params.id;
 
-    req.flash("success", "Khôi phục tài khoản thành công!");
+        await AccountAdmin.updateOne({
+            _id: id
+        }, {
+            deleted: false
+        })
 
-    res.json({
-      code: "success"
-    })
-  } catch (error) {
-    res.json({
-      code: "error",
-      message: "Id không hợp lệ!"
-    })
-  }
+        req.flash("success", "Khôi phục tài khoản thành công!");
+
+        res.json({
+            code: "success"
+        })
+    } catch (error) {
+        res.json({
+            code: "error",
+            message: "Id không hợp lệ!"
+        })
+    }
 }
 //Xóa
 module.exports.deleteDestroyPatch = async (req, res) => {
-  try {
-    const id = req.params.id;
-    
-    await AccountAdmin.deleteOne({
-      _id: id
-    })
+    try {
+        const id = req.params.id;
 
-    req.flash("success", "Đã xóa vĩnh viễn tài khoản thành công!");
+        await AccountAdmin.deleteOne({
+            _id: id
+        })
 
-    res.json({
-      code: "success"
-    })
-  } catch (error) {
-    res.json({
-      code: "error",
-      message: "Id không hợp lệ!"
-    })
-  }
+        req.flash("success", "Đã xóa vĩnh viễn tài khoản thành công!");
+
+        res.json({
+            code: "success"
+        })
+    } catch (error) {
+        res.json({
+            code: "error",
+            message: "Id không hợp lệ!"
+        })
+    }
 }
 //Trạng thái
 module.exports.changeMultiAccountAdminPatch = async (req, res) => {
-  try {
-    const {option , ids} = req.body;
-    switch (option) {
-      case "initial":
-      case "active":
-      case "inactive":
-        await AccountAdmin.updateMany({
-          _id: { $in: ids }
-        },{
-          status:option
+    try {
+        const { option, ids } = req.body;
+        switch (option) {
+            case "initial":
+            case "active":
+            case "inactive":
+                await AccountAdmin.updateMany({
+                    _id: { $in: ids }
+                }, {
+                    status: option
+                })
+                req.flash("success", "Đổi trạng thái thành công !")
+                break;
+            case "delete":
+                await AccountAdmin.updateMany({
+                    _id: { $in: ids }
+                }, {
+                    deleted: true,
+                    deletedBy: req.account.id,
+                    deletedAt: Date.now()
+                })
+                req.flash("success", "Xóa tài khoản quản trị thành công !")
+                break;
+            default:
+                break;
+        }
+        res.json({
+            code: "success"
         })
-        req.flash("success","Đổi trạng thái thành công !")
-        break;
-      case "delete":
-        await AccountAdmin.updateMany({
-          _id: { $in: ids }
-        },{
-          deleted:true,
-          deletedBy:req.account.id,
-          deletedAt: Date.now()
+    } catch (error) {
+        res.json({
+            code: "error",
+            message: "Id không tồn tại trong hệ thống !"
         })
-        req.flash("success","Xóa tài khoản quản trị thành công !")
-        break;
-      default:
-        break;
     }
-    res.json({
-      code:"success"
-    })
-  } catch (error) {
-    res.json({
-      code:"error",
-      message:"Id không tồn tại trong hệ thống !"
-    })
-  }
 }
 //Thùng rác
 module.exports.accountAdminTrash = async (req, res) => {
-  const find = {
-    deleted: true
-  }
-  //Nhóm quyền
-  const listRole = await Role.find({
-      deleted: false
-  })
-  //Lọc theo trạng thái
-  if (req.query.status) {
-      find.status = req.query.status;
-  }
-  //Lọc theo quyền
-  if(req.query.role){
-      find.role = req.query.role
-  }
-
-  // Lọc theo ngày tạo
-  const dateFilter = {};
-  if (req.query.dateStart) {
-      const startDate = moment(req.query.dateStart).startOf("date").toDate();
-      dateFilter.$gte = startDate;
-  }
-  if (req.query.dateStart) {
-      const endDate = moment(req.query.dateEnd).endOf("date").toDate();
-      dateFilter.$lte = endDate;
-  }
-  if (Object.keys(dateFilter).length > 0) {
-      find.createdAt = dateFilter;
-  }
-
-  //Tìm kiếm
-  if (req.query.keyword) {
-    const keyword = req.query.keyword;
-    const keywordRegex = new RegExp(keyword, "i"); // i = không phân biệt hoa thường
-
-    console.log("name", keywordRegex)
-    find.$or = [
-        { fullName: keywordRegex },
-        { phone: keywordRegex },
-        { "items.name": keywordRegex }
-    ];
-  }
-
-  // Phân trang
-  const limitItems = 3;
-  let page = 1;
-  if (req.query.page) {
-      const currentPage = parseInt(req.query.page);
-      if (currentPage > 0) {
-      page = currentPage;
-      }
-  }
-
-  const totalRecord = await AccountAdmin.countDocuments(find);
-  const totalPage = Math.ceil(totalRecord / limitItems);
-
-  // Xử lý trường hợp không có bản ghi
-  if (totalRecord === 0) {
-      page = 1; // Đặt page về 1
-  } else if (page > totalPage) {
-      page = totalPage;
-  }
-
-  const skip = (page - 1) * limitItems;
-  const pagination = {
-      skip: skip,
-      totalRecord: totalRecord,
-      totalPage: totalPage,
-  };
-  const accountAdminList = await AccountAdmin
-    .find(find)
-    .sort({
-        createdAt: "desc"
+    const find = {
+        deleted: true
+    }
+    //Nhóm quyền
+    const listRole = await Role.find({
+        deleted: false
     })
-    .limit(limitItems)
-    .skip(skip)
-  
-  for (const item of accountAdminList) {
-      if (item.role) {
-          const roleInf = await Role.findOne({
-              _id: item.role
-          })
+    //Lọc theo trạng thái
+    if (req.query.status) {
+        find.status = req.query.status;
+    }
+    //Lọc theo quyền
+    if (req.query.role) {
+        find.role = req.query.role
+    }
 
-          if (roleInf) {
-              item.nameRole = roleInf.name;
-          }
-      }
+    // Lọc theo ngày tạo
+    const dateFilter = {};
+    if (req.query.dateStart) {
+        const startDate = moment(req.query.dateStart).startOf("date").toDate();
+        dateFilter.$gte = startDate;
+    }
+    if (req.query.dateStart) {
+        const endDate = moment(req.query.dateEnd).endOf("date").toDate();
+        dateFilter.$lte = endDate;
+    }
+    if (Object.keys(dateFilter).length > 0) {
+        find.createdAt = dateFilter;
+    }
 
-  }
-  console.log(accountAdminList)
-  res.render('admin/pages/setting-account-admin-trash', {
-      pageTitle: "Tài khoản quản trị",
-      accountAdminList: accountAdminList,
-      listRole: listRole,
-      pagination:pagination
-  })
+    //Tìm kiếm
+    if (req.query.keyword) {
+        const keyword = req.query.keyword;
+        const keywordRegex = new RegExp(keyword, "i"); // i = không phân biệt hoa thường
+
+        console.log("name", keywordRegex)
+        find.$or = [
+            { fullName: keywordRegex },
+            { phone: keywordRegex },
+            { "items.name": keywordRegex }
+        ];
+    }
+
+    // Phân trang
+    const limitItems = 3;
+    let page = 1;
+    if (req.query.page) {
+        const currentPage = parseInt(req.query.page);
+        if (currentPage > 0) {
+            page = currentPage;
+        }
+    }
+
+    const totalRecord = await AccountAdmin.countDocuments(find);
+    const totalPage = Math.ceil(totalRecord / limitItems);
+
+    // Xử lý trường hợp không có bản ghi
+    if (totalRecord === 0) {
+        page = 1; // Đặt page về 1
+    } else if (page > totalPage) {
+        page = totalPage;
+    }
+
+    const skip = (page - 1) * limitItems;
+    const pagination = {
+        skip: skip,
+        totalRecord: totalRecord,
+        totalPage: totalPage,
+    };
+    const accountAdminList = await AccountAdmin
+        .find(find)
+        .sort({
+            createdAt: "desc"
+        })
+        .limit(limitItems)
+        .skip(skip)
+
+    for (const item of accountAdminList) {
+        if (item.role) {
+            const roleInf = await Role.findOne({
+                _id: item.role
+            })
+
+            if (roleInf) {
+                item.nameRole = roleInf.name;
+            }
+        }
+
+    }
+    console.log(accountAdminList)
+    res.render('admin/pages/setting-account-admin-trash', {
+        pageTitle: "Tài khoản quản trị",
+        accountAdminList: accountAdminList,
+        listRole: listRole,
+        pagination: pagination
+    })
 }
 // Thay đổi trạng thái thùng rác tài khoản quản trị
 module.exports.trashAccountAdminChangeMultiPatch = async (req, res) => {
-  try {
-    const { option, ids } = req.body;
+    try {
+        const { option, ids } = req.body;
 
-    switch (option) {
-      case "undo":
-        await AccountAdmin.updateMany({
-          _id: { $in: ids }
-        }, {
-          deleted: false
-        });
-        req.flash("success", "Khôi phục tài khoản thành công!");
-        break;
-      case "delete-destroy":
-        await AccountAdmin.deleteMany({
-          _id: { $in: ids }
-        });
-        req.flash("success", "Xóa viễn viễn tài khoản thành công!");
-        break;
+        switch (option) {
+            case "undo":
+                await AccountAdmin.updateMany({
+                    _id: { $in: ids }
+                }, {
+                    deleted: false
+                });
+                req.flash("success", "Khôi phục tài khoản thành công!");
+                break;
+            case "delete-destroy":
+                await AccountAdmin.deleteMany({
+                    _id: { $in: ids }
+                });
+                req.flash("success", "Xóa viễn viễn tài khoản thành công!");
+                break;
+        }
+
+        res.json({
+            code: "success"
+        })
+    } catch (error) {
+        res.json({
+            code: "error",
+            message: "Id không tồn tại trong hệ thông!"
+        })
     }
-
-    res.json({
-      code: "success"
-    })
-  } catch (error) {
-    res.json({
-      code: "error",
-      message: "Id không tồn tại trong hệ thông!"
-    })
-  }
 }
 
 
@@ -609,8 +609,23 @@ module.exports.roleCreatePost = async (req, res) => {
     req.body.createdBy = req.account.id;
     req.body.updatedBy = req.account.id;
 
+
+    // const roleExits = await Role.findOne({
+    //     name: req.body.name
+    // })
+
+    // if (roleExits) {
+    //     res.json({
+    //         code: "error",
+    //         message: "Bị trùng tên"
+    //     })
+    //     return
+    // }
+
     const newRecord = new Role(req.body);
     await newRecord.save();
+
+
 
     req.flash("success", "Tạo nhóm quyền thành công!");
 
